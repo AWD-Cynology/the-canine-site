@@ -21,7 +21,7 @@ export class GalleryComponent implements OnInit {
     });
  
     this.http.get(url, { headers }).subscribe((response: any) => {
-      this.data = response
+      this.data = response;
     }, (error) => {
       console.error('Error fetching dog image:', error);
     });
