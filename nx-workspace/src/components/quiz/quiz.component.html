@@ -1,0 +1,4 @@
+<img *ngIf="dogToGuess" src="{{ dogToGuess['url']}} ">
+<br>
+<button *ngFor="let dog of data" (click)="takeAGuess(dog)">{{ dog['breeds'][0]['name'] }}</button>
+<p [innerText]="message"></p>
