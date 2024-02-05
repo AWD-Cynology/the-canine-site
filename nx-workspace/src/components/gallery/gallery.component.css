@@ -1,5 +1,9 @@
 img {
-    max-width: 200px;
-    max-height: 200px;
+    max-height: 300px;
     margin-left: 20px;
+}
+
+div {
+    display: inline-block;
+    text-align: center;
 }
