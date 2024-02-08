@@ -7,7 +7,7 @@ import { Component, OnInit } from '@angular/core';
   standalone: true,
   imports: [ CommonModule, HttpClientModule ],
   templateUrl: './quiz.component.html',
-  styleUrl: './quiz.component.css'
+  styleUrls: ['./quiz.component.css', '../../styles.css']
 })
 export class QuizComponent implements OnInit {
   public data = [];
