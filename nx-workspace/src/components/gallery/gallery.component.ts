@@ -7,7 +7,7 @@ import { Component, OnInit } from '@angular/core';
   standalone: true,
   imports: [ CommonModule, HttpClientModule ],
   templateUrl: './gallery.component.html',
-  styleUrl: './gallery.component.css'
+  styleUrls: ['./gallery.component.css','../../styles.css']
 })
 export class GalleryComponent implements OnInit {
   private getPhotosUrl = 'https://api.thedogapi.com/v1/images/search?size=med&mime_types=jpg&format=json&has_breeds=true&order=RANDOM&page=0&limit=10';

@@ -7,7 +7,7 @@ import { Component, OnInit } from '@angular/core';
   standalone: true,
   imports: [ CommonModule, HttpClientModule ],
   templateUrl: './favorites.component.html',
-  styleUrl: './favorites.component.css'
+  styleUrls: ['./favorites.component.css', '../../styles.css']
 })
 export class FavoritesComponent implements OnInit {
   private url = 'https://api.thedogapi.com/v1/favourites';

@@ -1,9 +1,47 @@
-img {
-    max-height: 300px;
-    margin-left: 20px;
+.gallery {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 20px;
+    margin-top: 50px;
 }
 
-div {
-    display: inline-block;
-    text-align: center;
+.gallery img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 20px; /* More rounded corners */
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
+}
+
+.gallery button {
+    margin-bottom: 5px;
+    padding: 10px;
+    border: none;
+    background-color: #795548; /* Dark brown color */
+    color: white;
+    font-size: 16px;
+    border-radius: 8px; /* Rounded corners */
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.gallery button.upvote i {
+    color: #66bb6a; /* Light green arrow color */
+}
+
+.gallery button.downvote i {
+    color: #ef5350; /* Light red arrow color */
+}
+
+/* Background color for buttons */
+.gallery button.upvote {
+    background-color: #a5d6a7; /* Light green background color */
+}
+
+.gallery button.downvote {
+    background-color: #ef9a9a; /* Light red background color */
+}
+
+/* Optional: Hover effect */
+.gallery button:hover {
+    background-color: #6d4c41; /* Darker brown on hover */
 }
