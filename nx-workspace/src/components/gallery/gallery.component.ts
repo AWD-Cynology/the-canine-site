@@ -12,6 +12,7 @@ import { Component, OnInit } from '@angular/core';
 export class GalleryComponent implements OnInit {
   private getPhotosUrl = 'https://api.thedogapi.com/v1/images/search?size=med&mime_types=jpg&format=json&has_breeds=true&order=RANDOM&page=0&limit=10';
   private addToFavoritesUrl = 'https://api.thedogapi.com/v1/favourites';
+  private voteUrl = 'https://api.thedogapi.com/v1/votes';
   private headers = new HttpHeaders({
     'x-api-key': 'live_FJaduOjImMV3tzhbdWv6uwu8wUcpmTbk21SOtn2KjMKfeSHuaROr4V4Px5M3ndYk'
   });
@@ -37,6 +38,17 @@ export class GalleryComponent implements OnInit {
 
   public addToFavorites(dog: any): void {
     this.http.post(this.addToFavoritesUrl, { "image_id": dog['id'] }, { headers: this.headers }).subscribe({
+      next: (response: any) => {
+        console.log(response);
+      },
+      error: (error) => {
+        console.error(error);
+      }
+    });
+  }
+
+  public vote(vote: number, dog: any): void {
+    this.http.post(this.voteUrl, { "image_id": dog['id'], "value": vote }, { headers: this.headers }).subscribe({
       next: (response: any) => {
         console.log(response);
       },

@@ -1,22 +1,22 @@
 <div class="container">
-    <section class="gallery">
-        <div class="gallery-item" *ngFor="let dog of data">
-            <img src="{{dog['url']}}" (click)="displayDetails(dog)">
-            <p>{{ dog['breeds'][0]['name'] }}</p>
-            <div class="vote-container">
-              <div class="vote-buttons">
-                <button class="upvote" onclick="updateVotes(this, 'up')">
-                  <i class="fas fa-arrow-up"></i> Upvote
-              </button>
-              <button class="downvote" onclick="updateVotes(this, 'down')">
-                  <i class="fas fa-arrow-down"></i> Downvote
-              </button>
-              <button (click)="addToFavorites(dog)">Add to favorites</button>
-              </div>
-                <div class="vote-counter">
-                  Upvotes: <span class="upvotes">0</span> | Downvotes: <span class="downvotes">0</span>
-              </div>
-            </div>
+  <section class="gallery">
+    <div class="gallery-item" *ngFor="let dog of data">
+      <img src="{{dog['url']}}" (click)="displayDetails(dog)">
+      <p>{{ dog['breeds'][0]['name'] }}</p>
+      <div class="vote-container">
+        <div class="vote-buttons">
+          <button class="upvote" (click)="vote(1, dog)">
+            <i class="fas fa-arrow-up"></i> Upvote
+          </button>
+          <button class="downvote" (click)="vote(0, dog)">
+            <i class="fas fa-arrow-down"></i> Downvote
+          </button>
+          <button (click)="addToFavorites(dog)">Add to favorites</button>
         </div>
-    </section>
+        <div class="vote-counter">
+          Upvotes: <span class="upvotes">0</span> | Downvotes: <span class="downvotes">0</span>
+        </div>
+      </div>
+    </div>
+  </section>
 </div>
