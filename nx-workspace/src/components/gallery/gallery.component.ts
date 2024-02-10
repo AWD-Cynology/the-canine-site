@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { HttpClient, HttpClientModule, HttpHeaders } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
+import { Dog } from '../../models/dog.model';
 
 @Component({
   selector: 'app-gallery',
@@ -17,13 +18,13 @@ export class GalleryComponent implements OnInit {
     'x-api-key': 'live_FJaduOjImMV3tzhbdWv6uwu8wUcpmTbk21SOtn2KjMKfeSHuaROr4V4Px5M3ndYk'
   });
   
-  public data = [];
+  public data: Dog[] = [];
 
   constructor(private http: HttpClient) { }
 
   ngOnInit(): void {
-    this.http.get(this.getPhotosUrl, { headers: this.headers }).subscribe({
-      next: (response: any) => {
+    this.http.get<Dog[]>(this.getPhotosUrl, { headers: this.headers }).subscribe({
+      next: (response: Dog[]) => {
         this.data = response;
       },
       error: (error) => {

@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { HttpClient, HttpClientModule, HttpHeaders } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
+import { FavoriteDog } from '../../models/dog.model';
 
 @Component({
   selector: 'app-favorites',
@@ -15,13 +16,13 @@ export class FavoritesComponent implements OnInit {
     'x-api-key': 'live_FJaduOjImMV3tzhbdWv6uwu8wUcpmTbk21SOtn2KjMKfeSHuaROr4V4Px5M3ndYk'
   });
 
-  public data = [];
+  public data: FavoriteDog[] = [];
 
   public constructor(private http: HttpClient) { }
 
   public ngOnInit(): void {
-    this.http.get(this.url, { headers: this.headers }).subscribe({
-      next: (response: any) => {
+    this.http.get<FavoriteDog[]>(this.url, { headers: this.headers }).subscribe({
+      next: (response: FavoriteDog[]) => {
         this.data = response;
       },
       error: (error) => {

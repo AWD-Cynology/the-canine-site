@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { HttpClient, HttpClientModule, HttpHeaders } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
+import { Dog } from '../../models/dog.model';
 
 @Component({
   selector: 'app-quiz',
@@ -10,28 +11,31 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./quiz.component.css', '../../styles.css']
 })
 export class QuizComponent implements OnInit {
-  public data = [];
-  public dogToGuess: any;
+  private url = 'https://api.thedogapi.com/v1/images/search?size=med&mime_types=jpg&format=json&has_breeds=true&order=RANDOM&page=0&limit=4';
+  private headers = new HttpHeaders({
+    'x-api-key': 'live_FJaduOjImMV3tzhbdWv6uwu8wUcpmTbk21SOtn2KjMKfeSHuaROr4V4Px5M3ndYk'
+  });
+
+  public data: Dog[] = [];
+  public dogToGuess: Dog = new Dog;
   public message = '';
 
   public constructor(private http: HttpClient) { }
   
   public ngOnInit(): void {
-    const url = 'https://api.thedogapi.com/v1/images/search?size=med&mime_types=jpg&format=json&has_breeds=true&order=RANDOM&page=0&limit=4';
-    const headers = new HttpHeaders({
-      'x-api-key': 'live_FJaduOjImMV3tzhbdWv6uwu8wUcpmTbk21SOtn2KjMKfeSHuaROr4V4Px5M3ndYk'
-    });
- 
-    this.http.get(url, { headers }).subscribe((response: any) => {
-      this.data = response;
-      this.dogToGuess = this.data[Math.floor(Math.random() * this.data.length)];
-    }, (error: any) => {
-      console.error('Error fetching dog image:', error);
+    this.http.get<Dog[]>(this.url, { headers: this.headers }).subscribe({
+      next: (response: Dog[]) => {
+        this.data = response;
+        this.dogToGuess = this.data[Math.floor(Math.random() * this.data.length)];
+      },
+      error: (error) => {
+        console.error(error);
+      }
     });
   }
 
-  public takeAGuess(dog: any): void {
-    if (dog['breeds'][0]['name'] === this.dogToGuess['breeds'][0]['name']){
+  public takeAGuess(dogName: string): void {
+    if (dogName === this.dogToGuess.breeds[0].name){
       this.message = 'You guessed right.';
     }
     else {
