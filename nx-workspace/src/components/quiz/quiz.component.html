@@ -1,9 +1,12 @@
 <div class="container">
     <section class="quiz">
-        <h2>Guess the Breed</h2>
-        <img *ngIf="dogToGuess" src="{{ dogToGuess.url }} ">
-        <br>
-        <button *ngFor="let dog of data" (click)="takeAGuess(dog.breeds[0].name)">{{ dog.breeds[0].name }}</button>
-        <p [innerText]="message"></p>
+        <div class="surface">
+            <h2>Guess the Breed</h2>
+            <img *ngIf="dogToGuess" src="{{ dogToGuess['url'] }} ">
+            <div class="button-container">
+                <button *ngFor="let dog of data" (click)="takeAGuess(dog)">{{ dog['breeds'][0]['name'] }}</button>
+            </div>
+            <p [innerText]="message"></p>
+        </div>
     </section>
 </div>

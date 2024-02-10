@@ -11,6 +11,7 @@ import { ApiService } from '../../services/api-service.service';
   styleUrls: ['./favorites.component.css', '../../styles.css']
 })
 export class FavoritesComponent implements OnInit {
+
   public data: FavoriteDog[] = [];
 
   public constructor(private apiService: ApiService) { }
