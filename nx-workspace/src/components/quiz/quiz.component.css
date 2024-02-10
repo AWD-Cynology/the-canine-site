@@ -3,39 +3,45 @@
     margin-bottom: 50px;
 }
 
-.quiz h2 {
+.surface {
+    background-color: #6d4c41; /* Brownish background color */
+    border-radius: 20px; /* Rounded corners */
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.3); /* Shadow effect */
+    padding: 20px; /* Padding to create spacing */
+    margin: 0 auto; /* Center the container */
+    max-width: 60%; /* Limit the width of the surface */
+}
+
+.surface h2 {
     font-size: 28px; /* Larger font size for headings */
     margin-bottom: 20px;
 }
 
-.quiz img {
-    max-width: 90%; /* Slightly larger image */
+.surface img {
+    max-width: 100%; /* Ensure image does not overflow container */
     height: auto;
-    border-radius: 20px; /* More rounded corners */
-    box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
-    margin: 20px auto;
-    display: block;
+    border-radius: 10px; /* Rounded corners for the image */
+    margin-bottom: 20px; /* Spacing between image and buttons */
 }
 
-.quiz input[type="text"],
-.quiz button {
+.button-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 5px; /* Spacing between buttons */
+}
+
+.button-container button {
     padding: 12px 24px; /* Slightly larger padding */
     border: none;
     background-color: #795548; /* Dark brown color */
     color: white;
     font-size: 18px;
     border-radius: 8px; /* Rounded corners */
-    margin-top: 20px;
-    margin-right: 5px;
     cursor: pointer;
     transition: background-color 0.3s ease;
 }
 
-.quiz input[type="text"]::placeholder {
-    color: #bcaaa4; /* Light brown placeholder color */
-}
-
-.quiz input[type="text"]:focus,
-.quiz button:hover {
+.button-container button:hover {
     background-color: #6d4c41; /* Darker brown on hover */
 }
