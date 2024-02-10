@@ -12,6 +12,7 @@ export class ApiService {
     'x-api-key': 'live_FJaduOjImMV3tzhbdWv6uwu8wUcpmTbk21SOtn2KjMKfeSHuaROr4V4Px5M3ndYk'
   });
   private getPhotosUrl = 'https://api.thedogapi.com/v1/images/search';
+  private getDogUrl = 'https://api.thedogapi.com/v1/images/';
   private getFavoritesUrl = 'https://api.thedogapi.com/v1/favourites';
   private addToFavoritesUrl = 'https://api.thedogapi.com/v1/favourites';
   private votesUrl = 'https://api.thedogapi.com/v1/votes';
@@ -36,5 +37,9 @@ export class ApiService {
 
   public vote(vote: number, dog: Dog): Observable<any> {
     return this.http.post<any>(this.votesUrl, { "image_id": dog.id, "value": vote }, { headers: this.headers });
+  }
+
+  public getDog(dog: FavoriteDog): Observable<Dog> {
+    return this.http.get<Dog>(this.getDogUrl + dog.image_id, {headers: this.headers});
   }
 }
