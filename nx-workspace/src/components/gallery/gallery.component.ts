@@ -1,9 +1,10 @@
 import { CommonModule } from '@angular/common';
-import { HttpClient, HttpClientModule, HttpHeaders, HttpParams } from '@angular/common/http';
+import { HttpClientModule, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { Dog } from '../../models/dog.model';
 import { Vote } from '../../models/vote.model';
 import { forkJoin } from 'rxjs';
+import { ApiService } from '../../services/api-service.service';
 
 @Component({
   selector: 'app-gallery',
@@ -13,29 +14,24 @@ import { forkJoin } from 'rxjs';
   styleUrls: ['./gallery.component.css','../../styles.css']
 })
 export class GalleryComponent implements OnInit {
-  private getPhotosUrl = 'https://api.thedogapi.com/v1/images/search';
-  private addToFavoritesUrl = 'https://api.thedogapi.com/v1/favourites';
-  private votesUrl = 'https://api.thedogapi.com/v1/votes';
-  private headers = new HttpHeaders({
-    'x-api-key': 'live_FJaduOjImMV3tzhbdWv6uwu8wUcpmTbk21SOtn2KjMKfeSHuaROr4V4Px5M3ndYk'
-  });
   
   public data: Dog[] = [];
   public pageSize: number = 10;
   public currentPage: number = 0;
 
-  constructor(private http: HttpClient) { }
+  constructor(private apiService: ApiService) { }
 
   private fetchData(): void {
     let params = new HttpParams()
       .set('limit', this.pageSize.toString())
       .set('page', this.currentPage.toString())
       .set('order', 'ASC')
-      .set('has_breeds', 'true');
+      .set('has_breeds', 'true')
+      .set('mime_types', 'jpg,png');
 
     forkJoin({
-      photos: this.http.get<Dog[]>(this.getPhotosUrl, { headers: this.headers, params: params }),
-      votes: this.http.get<Vote[]>(this.votesUrl, { headers: this.headers })
+      photos: this.apiService.getDogs(params),
+      votes: this.apiService.getVotes()
     }).subscribe({
       next: ({ photos, votes }) => {
         this.data = photos;
@@ -60,8 +56,8 @@ export class GalleryComponent implements OnInit {
     console.log(dog);
   }
 
-  public addToFavorites(dog: any): void {
-    this.http.post(this.addToFavoritesUrl, { "image_id": dog.id }, { headers: this.headers }).subscribe({
+  public addToFavorites(dog: Dog): void {
+    this.apiService.addToFavorites(dog).subscribe({
       next: (response: any) => {
         console.log(response);
       },
@@ -71,8 +67,8 @@ export class GalleryComponent implements OnInit {
     });
   }
 
-  public vote(vote: number, dog: any): void {
-    this.http.post(this.votesUrl, { "image_id": dog.id, "value": vote }, { headers: this.headers }).subscribe({
+  public vote(vote: number, dog: Dog): void {
+    this.apiService.vote(vote, dog).subscribe({
       next: () => {
         if (vote === 1) {
           dog.upvotes = (dog.upvotes || 0) + 1;
