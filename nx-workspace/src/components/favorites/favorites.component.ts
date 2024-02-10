@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
-import { FavoriteDog } from '../../models/dog.model';
+import { Dog, FavoriteDog } from '../../models/dog.model';
 import { ApiService } from '../../services/api-service.service';
 
 @Component({
@@ -11,7 +11,6 @@ import { ApiService } from '../../services/api-service.service';
   styleUrls: ['./favorites.component.css', '../../styles.css']
 })
 export class FavoritesComponent implements OnInit {
-
   public data: FavoriteDog[] = [];
 
   public constructor(private apiService: ApiService) { }
@@ -19,7 +18,17 @@ export class FavoritesComponent implements OnInit {
   public ngOnInit(): void {
     this.apiService.getFavoriteDogs().subscribe({
       next: (response: FavoriteDog[]) => {
-        this.data = response;
+        for (let dog of response) {
+          this.apiService.getDog(dog).subscribe({
+            next: (response: Dog) => {
+              dog.name = response.breeds[0].name;
+              this.data.push(dog);
+            },
+            error: (error) => {
+              console.log(error);
+            }
+          })
+        }
       },
       error: (error) => {
         console.log(error);

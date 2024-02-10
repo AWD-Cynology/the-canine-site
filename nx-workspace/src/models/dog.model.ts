@@ -5,6 +5,7 @@ export class FavoriteDog {
     sub_id: string = '';
     created_at: string = '';
     image: Image = new Image;
+    name: string = '';
 }
 
 export class Dog {
