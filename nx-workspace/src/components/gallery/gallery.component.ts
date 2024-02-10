@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { HttpClient, HttpClientModule, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpClientModule, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { Dog } from '../../models/dog.model';
 import { Vote } from '../../models/vote.model';
@@ -13,7 +13,7 @@ import { forkJoin } from 'rxjs';
   styleUrls: ['./gallery.component.css','../../styles.css']
 })
 export class GalleryComponent implements OnInit {
-  private getPhotosUrl = 'https://api.thedogapi.com/v1/images/search?page=0&limit=100&order=ASC&has_breeds=true';
+  private getPhotosUrl = 'https://api.thedogapi.com/v1/images/search';
   private addToFavoritesUrl = 'https://api.thedogapi.com/v1/favourites';
   private votesUrl = 'https://api.thedogapi.com/v1/votes';
   private headers = new HttpHeaders({
@@ -21,12 +21,20 @@ export class GalleryComponent implements OnInit {
   });
   
   public data: Dog[] = [];
+  public pageSize: number = 10;
+  public currentPage: number = 0;
 
   constructor(private http: HttpClient) { }
 
-  ngOnInit(): void {
+  private fetchData(): void {
+    let params = new HttpParams()
+      .set('limit', this.pageSize.toString())
+      .set('page', this.currentPage.toString())
+      .set('order', 'ASC')
+      .set('has_breeds', 'true');
+
     forkJoin({
-      photos: this.http.get<Dog[]>(this.getPhotosUrl, { headers: this.headers }),
+      photos: this.http.get<Dog[]>(this.getPhotosUrl, { headers: this.headers, params: params }),
       votes: this.http.get<Vote[]>(this.votesUrl, { headers: this.headers })
     }).subscribe({
       next: ({ photos, votes }) => {
@@ -42,6 +50,10 @@ export class GalleryComponent implements OnInit {
         console.error(error);
       }
     });
+  }
+
+  public ngOnInit(): void {
+    this.fetchData();
   }
 
   public displayDetails(dog: any): void {
@@ -72,5 +84,25 @@ export class GalleryComponent implements OnInit {
         console.error(error);
       }
     });
+  }
+
+  public nextPage(): void {
+    this.currentPage++;
+    this.fetchData();
+  }
+
+  public previousPage(): void {
+    this.currentPage--;
+    this.fetchData();
+  }
+
+  public firstPage(): void {
+    this.currentPage = 0;
+    this.fetchData();
+  }
+
+  public lastPage(): void {
+    this.currentPage = 15;
+    this.fetchData();
   }
 }

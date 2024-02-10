@@ -27,4 +27,11 @@
       </div>
     </div>
   </section>
+  <div>
+    <button (click)="firstPage()" [disabled]="currentPage === 0">First page</button>
+    <button (click)="previousPage()" [disabled]="currentPage === 0">Previous</button>
+    <span>Page {{ currentPage + 1 }} of {{ 16 }}</span>
+    <button (click)="nextPage()" [disabled]="currentPage === 15">Next</button>
+    <button (click)="lastPage()" [disabled]="currentPage === 15">Last page</button>
+  </div>
 </div>
