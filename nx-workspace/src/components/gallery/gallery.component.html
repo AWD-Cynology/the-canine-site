@@ -13,8 +13,16 @@
           </button>
           <button (click)="addToFavorites(dog)">Add to favorites</button>
         </div>
-        <div class="vote-counter">
-          Upvotes: <span class="upvotes">0</span> | Downvotes: <span class="downvotes">0</span>
+        <div>
+          Upvotes:
+          <span>
+            {{ dog.upvotes ? dog.upvotes : 0 }}
+          </span>
+          |
+          Downvotes:
+          <span>
+            {{ dog.downvotes ? dog.downvotes : 0 }}
+          </span>
         </div>
       </div>
     </div>

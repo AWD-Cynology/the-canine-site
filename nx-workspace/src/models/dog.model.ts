@@ -13,6 +13,8 @@ export class Dog {
     url: string = '';
     width: number = 0;
     height: number = 0;
+    upvotes: number = 0;
+    downvotes: number = 0;
 }
 
 export class Breed {
