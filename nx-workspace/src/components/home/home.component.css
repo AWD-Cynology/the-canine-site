@@ -30,3 +30,25 @@
     background-color: #317234;
     cursor: pointer;
 }
+
+/* ///////////////// EXPERIMENTAL AREA ///////////////////////// */
+.ticker-container {
+    overflow: hidden;
+    white-space: nowrap;
+    width: 100%;
+    background-color: #333;
+    color: white;
+    padding: 10px 0;
+}
+
+/* Styles for ticker content */
+.ticker-content {
+    display: inline-block;
+    animation: ticker-scroll 30s linear infinite; /* Adjust duration as needed */
+}
+
+/* Keyframes for scrolling animation */
+@keyframes ticker-scroll {
+    0% { transform: translateX(100%); }
+    100% { transform: translateX(-100%); }
+}
