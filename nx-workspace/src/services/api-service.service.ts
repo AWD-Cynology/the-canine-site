@@ -11,7 +11,6 @@ export class ApiService {
   private headers = new HttpHeaders({
     'x-api-key': 'live_FJaduOjImMV3tzhbdWv6uwu8wUcpmTbk21SOtn2KjMKfeSHuaROr4V4Px5M3ndYk'
   });
-  private getPhotosUrl = 'https://api.thedogapi.com/v1/images/search';
   private getBreedsUrl = 'https://api.thedogapi.com/v1/breeds/';
   private getDogUrl = 'https://api.thedogapi.com/v1/images/';
   private favoritesUrl = 'https://api.thedogapi.com/v1/favourites/';
@@ -45,9 +44,5 @@ export class ApiService {
 
   public getDog(dog: FavoriteDog): Observable<Dog> {
     return this.http.get<Dog>(this.getDogUrl + dog.image_id, { headers: this.headers });
-  }
-
-  public getRandomDogs(params: HttpParams): Observable<Dog[]> {
-    return this.http.get<Dog[]>(this.getPhotosUrl, { headers: this.headers, params: params });
   }
 }
