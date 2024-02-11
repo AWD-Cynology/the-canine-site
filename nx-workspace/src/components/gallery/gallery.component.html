@@ -2,14 +2,16 @@
   <section class="gallery">
     <div class="container gallery-item" *ngFor="let breed of data">
       <img src="{{ breed.image.url }}" (click)="displayDetails(breed)">
-      <div class="dog-name">
-        <span>{{ breed.name }}</span>
-        <button class="favorite" (click)="addToFavorites(breed)"> &#10084; </button>
-      </div>
-      <div class="votes">
-        <button class="upvote" (click)="vote(1, breed)"> &uarr; </button>
-        <span> Upvotes: {{ breed.upvotes ? breed.upvotes : 0 }} | Downvotes: {{ breed.downvotes ? breed.downvotes : 0 }} </span>
-        <button class="downvote" (click)="vote(0, breed)"> &darr; </button>
+      <div>
+        <div class="dog-name">
+          <span>{{ breed.name }}</span>
+          <button class="favorites" [ngClass]="{ 'in-favorites': breed.isInFavorites }" (click)="changeFavorite(breed)"> &#10084; </button>
+        </div>
+        <div class="votes">
+          <button class="upvote" (click)="vote(1, breed)"> &uarr; </button>
+          <span> Upvotes: {{ breed.upvotes ? breed.upvotes : 0 }} | Downvotes: {{ breed.downvotes ? breed.downvotes : 0 }} </span>
+          <button class="downvote" (click)="vote(0, breed)"> &darr; </button>
+        </div>
       </div>
     </div>
   </section>

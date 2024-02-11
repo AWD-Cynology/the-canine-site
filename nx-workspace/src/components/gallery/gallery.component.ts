@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { HttpParams } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
-import { Breed } from '../../models/dog.model';
+import { Breed, FavoriteDog } from '../../models/dog.model';
 import { forkJoin } from 'rxjs';
 import { ApiService } from '../../services/api-service.service';
 
@@ -27,9 +27,16 @@ export class GalleryComponent implements OnInit {
 
     forkJoin({
       breeds: this.apiService.getBreeds(params),
-      votes: this.apiService.getVotes()
+      votes: this.apiService.getVotes(),
+      favorites: this.apiService.getFavoriteDogs()
     }).subscribe({
-      next: ({ breeds, votes }) => {
+      next: ({ breeds, votes, favorites }) => {
+        favorites.forEach(x => {
+          let breed = breeds.find(breed => breed.image.id === x.image_id);
+          if (breed) {
+            breed.isInFavorites = true;
+          }
+        })
         votes.forEach(vote => {
           let breed = breeds.find(breed => breed.image.id === vote.image_id);
           if (breed) {
@@ -52,15 +59,35 @@ export class GalleryComponent implements OnInit {
     console.log(breed);
   }
 
-  public addToFavorites(breed: Breed): void {
-    this.apiService.addToFavorites(breed.image.id).subscribe({
-      next: (response: any) => {
-        console.log(response);
-      },
-      error: (error) => {
-        console.error(error);
-      }
-    });
+  public changeFavorite(breed: Breed): void {
+    if (breed.isInFavorites) {
+      this.apiService.getFavoriteDogs().subscribe({
+        next: (favorites: FavoriteDog[]) => {
+          let id = favorites.find(x => x.image_id === breed.image.id)?.id;
+          this.apiService.removeFavorite(id!).subscribe({
+            next: () => {
+              breed.isInFavorites = false;
+            },
+            error: (error) => {
+              console.error(error);
+            }
+          });
+        },
+        error: (error) => {
+          console.error(error);
+        }
+      });
+    }
+    else {
+      this.apiService.addFavorite(breed.image.id).subscribe({
+        next: () => {
+          breed.isInFavorites = true;
+        },
+        error: (error) => {
+          console.error(error);
+        }
+      });
+    }
   }
 
   public vote(vote: number, breed: Breed): void {

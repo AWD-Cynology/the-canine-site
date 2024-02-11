@@ -30,6 +30,7 @@ export class Breed {
     image: Image = new Image;
     upvotes: number = 0;
     downvotes: number = 0;
+    isInFavorites: boolean = false;
 }
 
 export class Image {
