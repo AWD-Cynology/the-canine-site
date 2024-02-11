@@ -3,10 +3,10 @@
         <h2>Favorites</h2>
         <div class="favorites-list">
             <div class="favorites-item" *ngFor="let dog of data">
-                <div class="frame">
+                <div class="dog-image">
                     <img src="{{ dog['image']['url'] }}">
                 </div>
-                <div>{{ dog.name }}</div>
+                <div class="dog-name">{{ dog.name }}</div>
             </div>
         </div>
     </section>
