@@ -1,54 +1,80 @@
-.gallery {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-    gap: 20px;
-    margin-top: 50px;
-    padding: 30px;
+.gallery-container {
+    margin: 30px auto;
+    width: 1500px;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
     background-color: #6d4c41;
     border-radius: 20px;
-    box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
-    position: relative; /* To position the overlay */
+    padding: 0 30px;
+    box-shadow: 10px 10px 10px 10px rgba(0, 0, 0, 0.1);
+}
+
+.gallery {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 10px;
+    color: white;
 }
 
 .gallery img {
     max-width: 100%;
-    height: auto;
-    border-radius: 20px; /* More rounded corners */
-    box-shadow: 5px 5px 10px 5px rgba(0, 0, 0, 0.1); /* Add shadow */
+    border-radius: 20px;
+    box-shadow: 5px 5px 10px 5px rgba(0, 0, 0, 0.1);
+    margin-bottom: 10px;
 }
 
-.gallery button {
-    margin-bottom: 5px;
-    padding: 10px;
+.gallery-item {
+    background-color: #553b32;
+    border-radius: 20px;
+    box-shadow: 5px 5px 10px 5px rgba(0, 0, 0, 0.1);
+    padding: 10px !important;
+    margin: 0;
+}
+
+.gallery-container button {
+    padding: 5px;
     border: none;
-    background-color: #795548; /* Dark brown color */
-    color: white;
-    font-size: 16px;
-    border-radius: 8px; /* Rounded corners */
+    border-radius: 10px;
     cursor: pointer;
     transition: background-color 0.3s ease;
-    box-shadow: 5px 5px 10px 5px rgba(0, 0, 0, 0.1); /* Add shadow */
-    margin-right: 5px;
 }
 
-.gallery button.upvote i {
-    color: #66bb6a; /* Light green arrow color */
+.gallery .upvote {
+    background-color: #a5d6a7;
+    color: #2d6a4f;
 }
 
-.gallery button.downvote i {
-    color: #ef5350; /* Light red arrow color */
+.gallery .downvote {
+    background-color: #ef9a9a;
+    color: #b71c1c;
+}
+.gallery .favorite {
+    background-color: transparent;
+    color: #bd1010;
+    font-size: 17px;
 }
 
-/* Background color for buttons */
-.gallery button.upvote {
-    background-color: #a5d6a7; /* Light green background color */
-}
-
-.gallery button.downvote {
-    background-color: #ef9a9a; /* Light red background color */
-}
-
-/* Optional: Hover effect */
 .gallery button:hover {
-    background-color: #6d4c41; /* Darker brown on hover */
+    background-color: #7e5a4f;
+}
+
+.dog-name {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 5px;
+}
+
+.votes {
+    text-align: center;
+}
+
+.pagination {
+    width: 100%;
+    text-align: center;
+}
+
+.pagination button {
+    margin-right: 5px;
 }
