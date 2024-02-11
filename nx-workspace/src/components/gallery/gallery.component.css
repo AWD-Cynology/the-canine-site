@@ -14,17 +14,23 @@
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
     gap: 10px;
-    color: white;
+    color: #ffffff;
 }
 
 .gallery img {
-    max-width: 100%;
     border-radius: 20px;
     box-shadow: 5px 5px 10px 5px rgba(0, 0, 0, 0.1);
     margin-bottom: 10px;
+    height: 200px;
+    width: 260px;
+    object-fit: fill;
 }
 
 .gallery-item {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 300px;
     background-color: #553b32;
     border-radius: 20px;
     box-shadow: 5px 5px 10px 5px rgba(0, 0, 0, 0.1);
@@ -49,10 +55,15 @@
     background-color: #ef9a9a;
     color: #b71c1c;
 }
-.gallery .favorite {
+
+.gallery .in-favorites {
+    color: #bd1010 !important;
+}
+
+.gallery .favorites {
     background-color: transparent;
-    color: #bd1010;
     font-size: 17px;
+    color: #f0f8ff;
 }
 
 .gallery button:hover {
@@ -73,6 +84,7 @@
 .pagination {
     width: 100%;
     text-align: center;
+    color: #ffffff;
 }
 
 .pagination button {

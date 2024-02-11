@@ -12,11 +12,10 @@ export class ApiService {
     'x-api-key': 'live_FJaduOjImMV3tzhbdWv6uwu8wUcpmTbk21SOtn2KjMKfeSHuaROr4V4Px5M3ndYk'
   });
   private getPhotosUrl = 'https://api.thedogapi.com/v1/images/search';
-  private getBreedsUrl = 'https://api.thedogapi.com/v1/breeds';
+  private getBreedsUrl = 'https://api.thedogapi.com/v1/breeds/';
   private getDogUrl = 'https://api.thedogapi.com/v1/images/';
-  private getFavoritesUrl = 'https://api.thedogapi.com/v1/favourites';
-  private addToFavoritesUrl = 'https://api.thedogapi.com/v1/favourites';
-  private votesUrl = 'https://api.thedogapi.com/v1/votes';
+  private favoritesUrl = 'https://api.thedogapi.com/v1/favourites/';
+  private votesUrl = 'https://api.thedogapi.com/v1/votes/';
 
   constructor(private http: HttpClient) { }
 
@@ -25,11 +24,15 @@ export class ApiService {
   }
 
   public getFavoriteDogs(): Observable<FavoriteDog[]> {
-    return this.http.get<FavoriteDog[]>(this.getFavoritesUrl, { headers: this.headers });
+    return this.http.get<FavoriteDog[]>(this.favoritesUrl, { headers: this.headers });
   }
 
-  public addToFavorites(imageId: string): Observable<any> {
-    return this.http.post<any>(this.addToFavoritesUrl, { "image_id": imageId }, { headers: this.headers });
+  public addFavorite(imageId: string): Observable<any> {
+    return this.http.post<any>(this.favoritesUrl, { "image_id": imageId }, { headers: this.headers });
+  }
+
+  public removeFavorite(id: number): Observable<any> {
+    return this.http.delete<any>(this.favoritesUrl + id.toString(), { headers: this.headers });
   }
 
   public getVotes(): Observable<Vote[]> {
@@ -41,7 +44,7 @@ export class ApiService {
   }
 
   public getDog(dog: FavoriteDog): Observable<Dog> {
-    return this.http.get<Dog>(this.getDogUrl + dog.image_id, {headers: this.headers});
+    return this.http.get<Dog>(this.getDogUrl + dog.image_id, { headers: this.headers });
   }
 
   public getRandomDogs(params: HttpParams): Observable<Dog[]> {
