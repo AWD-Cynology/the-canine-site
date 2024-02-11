@@ -20,7 +20,7 @@ export class ApiService {
   constructor(private http: HttpClient) { }
 
   public getDogs(params: HttpParams): Observable<Dog[]> {
-    return this.http.get<Dog[]>(this.getPhotosUrl, { headers: this.headers, params: params })
+    return this.http.get<Dog[]>(this.getPhotosUrl, { headers: this.headers, params: params });
   }
 
   public getFavoriteDogs(): Observable<FavoriteDog[]> {
@@ -32,7 +32,7 @@ export class ApiService {
   }
 
   public getVotes(): Observable<Vote[]> {
-    return this.http.get<Vote[]>(this.votesUrl, { headers: this.headers })
+    return this.http.get<Vote[]>(this.votesUrl, { headers: this.headers });
   }
 
   public vote(vote: number, dog: Dog): Observable<any> {
@@ -41,5 +41,9 @@ export class ApiService {
 
   public getDog(dog: FavoriteDog): Observable<Dog> {
     return this.http.get<Dog>(this.getDogUrl + dog.image_id, {headers: this.headers});
+  }
+
+  public getRandomDogs(params: HttpParams): Observable<Dog[]> {
+    return this.http.get<Dog[]>(this.getPhotosUrl, { headers: this.headers, params: params });
   }
 }
