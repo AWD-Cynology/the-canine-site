@@ -45,3 +45,11 @@
 .button-container button:hover {
     background-color: #6d4c41; /* Darker brown on hover */
 }
+
+.container {
+    color: #ffffff;
+}
+
+.guessed-right {
+    color: #00ff08 !important;
+}
