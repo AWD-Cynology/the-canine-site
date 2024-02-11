@@ -1,46 +1,42 @@
 import { CommonModule } from '@angular/common';
-import { HttpClientModule, HttpHeaders, HttpParams } from '@angular/common/http';
+import { HttpParams } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
-import { Dog } from '../../models/dog.model';
-import { Vote } from '../../models/vote.model';
+import { Breed } from '../../models/dog.model';
 import { forkJoin } from 'rxjs';
 import { ApiService } from '../../services/api-service.service';
 
 @Component({
   selector: 'app-gallery',
   standalone: true,
-  imports: [ CommonModule, HttpClientModule ],
+  imports: [ CommonModule ],
   templateUrl: './gallery.component.html',
   styleUrls: ['./gallery.component.css','../../styles.css']
 })
 export class GalleryComponent implements OnInit {
-  
-  public data: Dog[] = [];
+  public data: Breed[] = [];
   public pageSize: number = 10;
   public currentPage: number = 0;
+  public totalPages: number = 18;
 
   constructor(private apiService: ApiService) { }
 
   private fetchData(): void {
     let params = new HttpParams()
       .set('limit', this.pageSize.toString())
-      .set('page', this.currentPage.toString())
-      .set('order', 'ASC')
-      .set('has_breeds', 'true')
-      .set('mime_types', 'jpg,png');
+      .set('page', this.currentPage.toString());
 
     forkJoin({
-      photos: this.apiService.getDogs(params),
+      breeds: this.apiService.getBreeds(params),
       votes: this.apiService.getVotes()
     }).subscribe({
-      next: ({ photos, votes }) => {
-        this.data = photos;
+      next: ({ breeds, votes }) => {
         votes.forEach(vote => {
-          let dog = this.data.find(dog => dog.id === vote.image_id);
-          if (dog) {
-            vote.value === 0 ? dog.downvotes++ : dog.upvotes++;
+          let breed = breeds.find(breed => breed.image.id === vote.image_id);
+          if (breed) {
+            vote.value === 0 ? breed.downvotes++ : breed.upvotes++;
           }
         });
+        this.data = breeds;
       },
       error: (error) => {
         console.error(error);
@@ -52,12 +48,12 @@ export class GalleryComponent implements OnInit {
     this.fetchData();
   }
 
-  public displayDetails(dog: any): void {
-    console.log(dog);
+  public displayDetails(breed: Breed): void {
+    console.log(breed);
   }
 
-  public addToFavorites(dog: Dog): void {
-    this.apiService.addToFavorites(dog).subscribe({
+  public addToFavorites(breed: Breed): void {
+    this.apiService.addToFavorites(breed.image.id).subscribe({
       next: (response: any) => {
         console.log(response);
       },
@@ -67,13 +63,13 @@ export class GalleryComponent implements OnInit {
     });
   }
 
-  public vote(vote: number, dog: Dog): void {
-    this.apiService.vote(vote, dog).subscribe({
+  public vote(vote: number, breed: Breed): void {
+    this.apiService.vote(vote, breed.image.id).subscribe({
       next: () => {
         if (vote === 1) {
-          dog.upvotes = (dog.upvotes || 0) + 1;
+          breed.upvotes = (breed.upvotes || 0) + 1;
         } else {
-          dog.downvotes = (dog.downvotes || 0) + 1;
+          breed.downvotes = (breed.downvotes || 0) + 1;
         }
       },
       error: (error) => {
@@ -82,23 +78,23 @@ export class GalleryComponent implements OnInit {
     });
   }
 
-  public nextPage(): void {
+  public goToNextPage(): void {
     this.currentPage++;
     this.fetchData();
   }
 
-  public previousPage(): void {
+  public goToPreviousPage(): void {
     this.currentPage--;
     this.fetchData();
   }
 
-  public firstPage(): void {
+  public goToFirstPage(): void {
     this.currentPage = 0;
     this.fetchData();
   }
 
-  public lastPage(): void {
-    this.currentPage = 15;
+  public goToLastPage(): void {
+    this.currentPage = this.totalPages - 1;
     this.fetchData();
   }
 }
