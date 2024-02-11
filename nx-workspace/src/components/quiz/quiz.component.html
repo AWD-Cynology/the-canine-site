@@ -2,11 +2,11 @@
     <section class="quiz">
         <div class="surface">
             <h2>Guess the Breed</h2>
-            <img *ngIf="dogToGuess" src="{{ dogToGuess['url'] }} ">
+            <img *ngIf="breedToGuess" src="{{ breedToGuess.image.url }} ">
             <div class="button-container">
-                <button *ngFor="let dog of data" (click)="takeAGuess(dog.breeds[0].name)">{{ dog['breeds'][0]['name'] }}</button>
+                <button *ngFor="let breed of data" (click)="takeAGuess(breed.name)">{{ breed.name }}</button>
             </div>
-            <p [innerText]="message"></p>
+            <p [ngClass]="{ 'guessed-right': guessedRight }" [innerText]="message"></p>
         </div>
     </section>
 </div>
