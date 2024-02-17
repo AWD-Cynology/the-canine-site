@@ -11,7 +11,7 @@ import { forkJoin } from 'rxjs';
 })
 export class HomeComponent implements OnInit {
   @ViewChild('tickerContent', { static: true }) tickerContent!: ElementRef;
-  public pageSize: number = 150;
+  public pageSize: number = 172;
   public currentPage: number = 0;
 
   constructor(private router: Router, private renderer: Renderer2, private apiService: ApiService) { }
