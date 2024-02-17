@@ -3,10 +3,16 @@ import { GalleryComponent } from '../components/gallery/gallery.component';
 import { QuizComponent } from '../components/quiz/quiz.component';
 import { FavoritesComponent } from '../components/favorites/favorites.component';
 import { HomeComponent } from '../components/home/home.component';
+import { UsernameInputComponent } from '../components/username-input/username-input.component';
+import { AuthGuard } from '../services/auth.guard';
+
 
 export const routes: Routes = [
-    { path: '', component: HomeComponent },
-    { path: 'gallery', component: GalleryComponent },
-    { path: 'quiz', component: QuizComponent },
-    { path: 'favorites', component: FavoritesComponent }
+    { path: 'home', component: HomeComponent, canActivate: [AuthGuard] },
+    { path: '', component: HomeComponent, canActivate: [AuthGuard] },
+    { path: 'gallery', component: GalleryComponent, canActivate: [AuthGuard] },
+    { path: 'quiz', component: QuizComponent, canActivate: [AuthGuard] },
+    { path: 'favorites', component: FavoritesComponent, canActivate: [AuthGuard] },
+    { path: 'enter-username', component: UsernameInputComponent },
+
 ];
