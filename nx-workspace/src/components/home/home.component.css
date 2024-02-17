@@ -31,7 +31,6 @@
     cursor: pointer;
 }
 
-/* ///////////////// EXPERIMENTAL AREA ///////////////////////// */
 .ticker-container {
     overflow: hidden;
     white-space: nowrap;
@@ -41,14 +40,14 @@
     padding: 10px 0;
 }
 
-/* Styles for ticker content */
 .ticker-content {
+    max-width: 100%;
     display: inline-block;
-    animation: ticker-scroll 30s linear infinite; /* Adjust duration as needed */
+    animation: ticker-scroll 300s linear infinite;
 }
 
-/* Keyframes for scrolling animation */
 @keyframes ticker-scroll {
     0% { transform: translateX(100%); }
+    50% { transform: translateX(-1000%); }
     100% { transform: translateX(-100%); }
 }

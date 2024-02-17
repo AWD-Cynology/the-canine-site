@@ -1,44 +1,47 @@
-import { AfterViewInit, Component, Renderer2 } from '@angular/core';
+import { HttpParams } from '@angular/common/http';
+import { Component, ElementRef, OnInit, Renderer2, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
+import { ApiService } from '../../services/api-service.service';
+import { forkJoin } from 'rxjs';
 
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.css']
 })
-export class HomeComponent implements AfterViewInit {
+export class HomeComponent implements OnInit {
+  @ViewChild('tickerContent', { static: true }) tickerContent!: ElementRef;
+  public pageSize: number = 150;
+  public currentPage: number = 0;
 
-  constructor(private router: Router, private renderer: Renderer2) { }
-  ngAfterViewInit(): void {
-    if (typeof document !== 'undefined') {
-      this.updateTicker();
-      setInterval(() => this.updateTicker(), 30000); // update ticker-data every 30 seconds  
-   }
-  }
+  constructor(private router: Router, private renderer: Renderer2, private apiService: ApiService) { }
 
-  updateTicker(): void {
-    const tickerContent = document.getElementById('ticker-content');
-    if (tickerContent) {
-      tickerContent.innerHTML = '';
-
-      // Sample dog votes data
-      const dogVotes = [
-        { name: 'DogName1', upvotes: 30, downvotes: 15 },
-        { name: 'DogName2', upvotes: 50, downvotes: 30 },
-        { name: 'DogName3', upvotes: 13, downvotes: 45 },
-        { name: 'DogName4', upvotes: 60, downvotes: 11 },
-        // Add more dog data as needed  //fill this up with data from api
-      ];
-
-      // Generate content for each dog
-      dogVotes.forEach(dog => {
-        const dogElement = this.renderer.createElement('span');
-        this.renderer.setProperty(dogElement, 'textContent', ` | ${dog.name}: Upvotes ${dog.upvotes}, Downvotes ${dog.downvotes} | `);
-        this.renderer.appendChild(tickerContent, dogElement);
-      });
-    } else {
-      console.error('Ticker content element not found.');
-    }
+  public ngOnInit(): void {
+    let params = new HttpParams()
+      .set('limit', this.pageSize.toString())
+      .set('page', this.currentPage.toString());
+    this.tickerContent.nativeElement.innerHTML = '';
+    forkJoin({
+      breeds: this.apiService.getBreeds(params),
+      votes: this.apiService.getVotes()
+    }).subscribe({
+      next: ({ breeds, votes }) => {
+        votes.forEach(vote => {
+          let breed = breeds.find(breed => breed.image.id === vote.image_id);
+          if (breed) {
+            vote.value === 0 ? breed.downvotes++ : breed.upvotes++;
+          }
+        });
+        breeds.forEach(dog => {
+          const dogElement = this.renderer.createElement('span');
+          this.renderer.setProperty(dogElement, 'textContent', `| ${ dog.name }: Upvotes ${ dog.upvotes ? dog.upvotes : 0 }, Downvotes ${ dog.downvotes ? dog.downvotes : 0 } |`);
+          this.renderer.appendChild(this.tickerContent.nativeElement, dogElement);
+        });
+      },
+      error: (error) => {
+        console.error(error);
+      }
+    });
   }
 
   redirectToGallery(): void {
