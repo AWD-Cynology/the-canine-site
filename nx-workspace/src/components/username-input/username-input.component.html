@@ -1,0 +1,9 @@
+<div class="username-section" [ngClass]="{ 'show': usernameInput }">
+  <h2>Enter Your Username</h2>
+  <form (ngSubmit)="submitUsername()">
+    <div class="input-container">
+      <input type="text" name="username" #usernameInput class="username-input" placeholder="Enter your page username" required>
+      <button type="submit" class="submit-button">Submit</button>
+    </div>
+  </form>
+</div>
