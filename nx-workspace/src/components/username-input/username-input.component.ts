@@ -24,7 +24,7 @@ export class UsernameInputComponent {
       const storedUsername = localStorage.getItem('username');
       if (storedUsername) {
         this.router.navigate(['/home']);
-        return; // Exit early if username is already stored
+        return;
       }
       if (username) {
         localStorage.setItem('username', username);
