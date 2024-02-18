@@ -17,6 +17,7 @@ export class GalleryComponent implements OnInit {
   public pageSize: number = 10;
   public currentPage: number = 0;
   public totalPages: number = 18;
+  public points: number = 0;
 
   constructor(private apiService: ApiService) { }
 
@@ -53,6 +54,7 @@ export class GalleryComponent implements OnInit {
 
   public ngOnInit(): void {
     this.fetchData();
+    this.points = parseInt(localStorage.getItem('points') || '0', 10);
   }
 
   public displayDetails(breed: Breed): void {
@@ -91,8 +93,21 @@ export class GalleryComponent implements OnInit {
   }
 
   public vote(vote: number, breed: Breed): void {
+
+    const availablePoints  = parseInt(localStorage.getItem('points') || '0', 10);
+
+    if (availablePoints <= 0) {
+      console.log("You don't have enough points to vote.");
+      return;
+    }
+
+
+
     this.apiService.vote(vote, breed.image.id).subscribe({
       next: () => {
+        this.points = Math.max(0, availablePoints - 1)
+        localStorage.setItem('points', this.points.toString());
+
         if (vote === 1) {
           breed.upvotes = (breed.upvotes || 0) + 1;
         } else {

@@ -20,6 +20,7 @@ export class QuizComponent implements OnInit {
   public pageSize: number = 172;
   public currentPage: number = 0;
   public points: number = 0;
+  public guesses: number = 3;
 
   public constructor(private apiService: ApiService) { }
 
@@ -59,7 +60,8 @@ export class QuizComponent implements OnInit {
 
       const pointsString = localStorage.getItem('points');
       if (pointsString !== null && pointsString !== undefined) {
-        this.points = parseInt(pointsString, 10) + 1;
+        this.points = parseInt(pointsString, 10);
+        this.points = (this.points <= 0) ? Math.max(0, this.guesses) : this.points + this.guesses;
         localStorage.setItem('points', this.points.toString());
       }
       this.fetchData();
@@ -67,11 +69,14 @@ export class QuizComponent implements OnInit {
     else {
       this.message = 'You guessed wrong, guess again.';
       this.guessedRight = false;
+      if( this.guesses > -1 && --this.guesses == 0)
+        this.guesses=-1;
     }
   }
 
   private resetGuess(): void {
     this.message = '';
     this.guessedRight = false;
+    this.guesses = 3;
   }
 }

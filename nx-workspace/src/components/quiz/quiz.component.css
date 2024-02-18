@@ -4,46 +4,46 @@
 }
 
 .surface {
-    background-color: #6d4c41; /* Brownish background color */
-    border-radius: 20px; /* Rounded corners */
-    box-shadow: 0 0 15px rgba(0, 0, 0, 0.3); /* Shadow effect */
-    padding: 20px; /* Padding to create spacing */
-    margin: 0 auto; /* Center the container */
-    max-width: 60%; /* Limit the width of the surface */
+    background-color: #6d4c41;
+    border-radius: 20px;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.3); 
+    padding: 20px; 
+    margin: 0 auto; 
+    max-width: 60%; 
 }
 
 .surface h2 {
-    font-size: 28px; /* Larger font size for headings */
+    font-size: 28px;
     margin-bottom: 20px;
 }
 
 .surface img {
-    max-width: 100%; /* Ensure image does not overflow container */
+    max-width: 100%;
     height: auto;
-    border-radius: 10px; /* Rounded corners for the image */
-    margin-bottom: 20px; /* Spacing between image and buttons */
+    border-radius: 10px;
+    margin-bottom: 20px;
 }
 
 .button-container {
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
-    gap: 5px; /* Spacing between buttons */
+    gap: 5px;
 }
 
 .button-container button {
-    padding: 12px 24px; /* Slightly larger padding */
+    padding: 12px 24px;
     border: none;
-    background-color: #795548; /* Dark brown color */
+    background-color: #795548;
     color: white;
     font-size: 18px;
-    border-radius: 8px; /* Rounded corners */
+    border-radius: 8px;
     cursor: pointer;
     transition: background-color 0.3s ease;
 }
 
 .button-container button:hover {
-    background-color: #6d4c41; /* Darker brown on hover */
+    background-color: #6d4c41;
 }
 
 .container {
@@ -52,4 +52,9 @@
 
 .guessed-right {
     color: #00ff08 !important;
+}
+
+.points {
+    font-size: 18px;
+    margin-bottom: 20px;
 }

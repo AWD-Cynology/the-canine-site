@@ -3,6 +3,7 @@
     <section class="quiz">
         <div class="surface">
             <h2>Guess the Breed</h2>
+            <p class="points">Voting points: {{ points }}</p>
             <img *ngIf="breedToGuess" src="{{ breedToGuess.image.url }} ">
             <div class="button-container">
                 <button *ngFor="let breed of data" (click)="takeAGuess(breed.name)">{{ breed.name }}</button>
