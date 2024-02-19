@@ -3,16 +3,15 @@
     padding: 50px;
     background-color: #6d4c41;
     border-radius: 10px;
+    color: #ffffff;
 }
   
 .welcome-title {
     font-size: 36px;
-    color: #ffffff;
 }
 
-.welcome-text {
+.text {
     font-size: 20px;
-    color: #dadada;
 }
 
 .welcome-button {

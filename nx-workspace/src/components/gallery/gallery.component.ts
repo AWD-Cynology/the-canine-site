@@ -4,6 +4,7 @@ import { Component, OnInit } from '@angular/core';
 import { Breed, FavoriteDog } from '../../models/dog.model';
 import { forkJoin } from 'rxjs';
 import { ApiService } from '../../services/api-service.service';
+import { LoadingService } from '../../services/loading.service';
 
 @Component({
   selector: 'app-gallery',
@@ -19,9 +20,11 @@ export class GalleryComponent implements OnInit {
   public totalPages: number = 18;
   public points: number = 0;
 
-  constructor(private apiService: ApiService) { }
+  public constructor(private apiService: ApiService,
+    private loadingService: LoadingService) { }
 
   private fetchData(): void {
+    this.loadingService.setLoadingState(true);
     let params = new HttpParams()
       .set('limit', this.pageSize.toString())
       .set('page', this.currentPage.toString());
@@ -32,12 +35,17 @@ export class GalleryComponent implements OnInit {
       favorites: this.apiService.getFavoriteDogs()
     }).subscribe({
       next: ({ breeds, votes, favorites }) => {
+        this.loadingService.setLoadingState(true);
+        breeds.forEach(x => {
+          x.upvotes = 0;
+          x.downvotes = 0;
+        });
         favorites.forEach(x => {
           let breed = breeds.find(breed => breed.image.id === x.image_id);
           if (breed) {
             breed.isInFavorites = true;
           }
-        })
+        });
         votes.forEach(vote => {
           let breed = breeds.find(breed => breed.image.id === vote.image_id);
           if (breed) {
@@ -45,8 +53,10 @@ export class GalleryComponent implements OnInit {
           }
         });
         this.data = breeds;
+        this.loadingService.setLoadingState(false);
       },
       error: (error) => {
+        this.loadingService.setLoadingState(false);
         console.error(error);
       }
     });
@@ -57,25 +67,26 @@ export class GalleryComponent implements OnInit {
     this.points = parseInt(localStorage.getItem('points') || '0', 10);
   }
 
-  public displayDetails(breed: Breed): void {
-    console.log(breed);
-  }
-
   public changeFavorite(breed: Breed): void {
+    this.loadingService.setLoadingState(true);
     if (breed.isInFavorites) {
       this.apiService.getFavoriteDogs().subscribe({
         next: (favorites: FavoriteDog[]) => {
+          this.loadingService.setLoadingState(true);
           let id = favorites.find(x => x.image_id === breed.image.id)?.id;
           this.apiService.removeFavorite(id!).subscribe({
             next: () => {
               breed.isInFavorites = false;
+              this.loadingService.setLoadingState(false);
             },
             error: (error) => {
+              this.loadingService.setLoadingState(false);
               console.error(error);
             }
           });
         },
         error: (error) => {
+          this.loadingService.setLoadingState(false);
           console.error(error);
         }
       });
@@ -83,9 +94,12 @@ export class GalleryComponent implements OnInit {
     else {
       this.apiService.addFavorite(breed.image.id).subscribe({
         next: () => {
+          this.loadingService.setLoadingState(true);
           breed.isInFavorites = true;
+          this.loadingService.setLoadingState(false);
         },
         error: (error) => {
+          this.loadingService.setLoadingState(false);
           console.error(error);
         }
       });
@@ -93,18 +107,19 @@ export class GalleryComponent implements OnInit {
   }
 
   public vote(vote: number, breed: Breed): void {
-
+    this.loadingService.setLoadingState(true);
     const availablePoints  = parseInt(localStorage.getItem('points') || '0', 10);
+    const username = localStorage.getItem('username') || '';
 
     if (availablePoints <= 0) {
       console.log("You don't have enough points to vote.");
+      this.loadingService.setLoadingState(false);
       return;
     }
 
-
-
-    this.apiService.vote(vote, breed.image.id).subscribe({
+    this.apiService.vote(vote, breed.image.id, username).subscribe({
       next: () => {
+        this.loadingService.setLoadingState(true);
         this.points = Math.max(0, availablePoints - 1)
         localStorage.setItem('points', this.points.toString());
 
@@ -113,8 +128,10 @@ export class GalleryComponent implements OnInit {
         } else {
           breed.downvotes = (breed.downvotes || 0) + 1;
         }
+        this.loadingService.setLoadingState(false);
       },
       error: (error) => {
+        this.loadingService.setLoadingState(false);
         console.error(error);
       }
     });
