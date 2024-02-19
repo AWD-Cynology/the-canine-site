@@ -10,7 +10,7 @@
         </div>
         <div class="votes">
           <button class="upvote" (click)="vote(1, breed)"> &uarr; </button>
-          <span> Upvotes: {{ breed.upvotes ? breed.upvotes : 0 }} | Downvotes: {{ breed.downvotes ? breed.downvotes : 0 }} </span>
+          <span> Upvotes: {{ breed.upvotes }} | Downvotes: {{ breed.downvotes }} </span>
           <button class="downvote" (click)="vote(0, breed)"> &darr; </button>
         </div>
       </div>

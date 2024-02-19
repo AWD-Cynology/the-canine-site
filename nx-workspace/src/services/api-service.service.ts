@@ -38,8 +38,8 @@ export class ApiService {
     return this.http.get<Vote[]>(this.votesUrl, { headers: this.headers });
   }
 
-  public vote(vote: number, imageId: string): Observable<any> {
-    return this.http.post<any>(this.votesUrl, { "image_id": imageId, "value": vote }, { headers: this.headers });
+  public vote(vote: number, imageId: string, username: string): Observable<any> {
+    return this.http.post<any>(this.votesUrl, { "image_id": imageId, "value": vote, "sub_id": username }, { headers: this.headers });
   }
 
   public getDog(dog: FavoriteDog): Observable<Dog> {

@@ -32,12 +32,16 @@ export class GalleryComponent implements OnInit {
       favorites: this.apiService.getFavoriteDogs()
     }).subscribe({
       next: ({ breeds, votes, favorites }) => {
+        breeds.forEach(x => {
+          x.upvotes = 0;
+          x.downvotes = 0;
+        });
         favorites.forEach(x => {
           let breed = breeds.find(breed => breed.image.id === x.image_id);
           if (breed) {
             breed.isInFavorites = true;
           }
-        })
+        });
         votes.forEach(vote => {
           let breed = breeds.find(breed => breed.image.id === vote.image_id);
           if (breed) {
@@ -93,17 +97,15 @@ export class GalleryComponent implements OnInit {
   }
 
   public vote(vote: number, breed: Breed): void {
-
     const availablePoints  = parseInt(localStorage.getItem('points') || '0', 10);
+    const username = localStorage.getItem('username') || '';
 
     if (availablePoints <= 0) {
       console.log("You don't have enough points to vote.");
       return;
     }
 
-
-
-    this.apiService.vote(vote, breed.image.id).subscribe({
+    this.apiService.vote(vote, breed.image.id, username).subscribe({
       next: () => {
         this.points = Math.max(0, availablePoints - 1)
         localStorage.setItem('points', this.points.toString());

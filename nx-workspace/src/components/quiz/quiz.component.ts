@@ -33,7 +33,7 @@ export class QuizComponent implements OnInit {
     next: (response: Breed[]) => {
       const shuffledArray = shuffle(response);
       this.data = shuffledArray.slice(0, 4);
-      this.breedToGuess = this.data[0];
+      this.breedToGuess = this.data[Math.floor(Math.random() * this.data.length)];
       this.resetGuess();
     },
     error: (error) => {

@@ -26,6 +26,10 @@ export class HomeComponent implements OnInit {
       votes: this.apiService.getVotes()
     }).subscribe({
       next: ({ breeds, votes }) => {
+        breeds.forEach(x => {
+          x.upvotes = 0;
+          x.downvotes = 0;
+        });
         votes.forEach(vote => {
           let breed = breeds.find(breed => breed.image.id === vote.image_id);
           if (breed) {
@@ -34,7 +38,7 @@ export class HomeComponent implements OnInit {
         });
         breeds.forEach(dog => {
           const dogElement = this.renderer.createElement('span');
-          this.renderer.setProperty(dogElement, 'textContent', `| ${ dog.name }: Upvotes ${ dog.upvotes ? dog.upvotes : 0 }, Downvotes ${ dog.downvotes ? dog.downvotes : 0 } |`);
+          this.renderer.setProperty(dogElement, 'textContent', `| ${ dog.name }: Upvotes ${ dog.upvotes }, Downvotes ${ dog.downvotes } |`);
           this.renderer.appendChild(this.tickerContent.nativeElement, dogElement);
         });
       },
