@@ -4,6 +4,7 @@ import { Component, OnInit } from '@angular/core';
 import { Breed } from '../../models/dog.model';
 import { ApiService } from '../../services/api-service.service';
 import { shuffle } from 'lodash';
+import { LoadingService } from '../../services/loading.service';
 
 @Component({
   selector: 'app-quiz',
@@ -22,27 +23,43 @@ export class QuizComponent implements OnInit {
   public points: number = 0;
   public guesses: number = 3;
 
-  public constructor(private apiService: ApiService) { }
+  public constructor(private apiService: ApiService,
+    private loadingService: LoadingService) { }
+
+  private resetGuess(): void {
+    this.message = '';
+    this.guessedRight = false;
+    this.guesses = 3;
+  }
+
+  private setRandomDog(dogs: Breed[]): void {
+    const shuffledArray = shuffle(dogs);
+    this.data = shuffledArray.slice(0, 4);
+    this.breedToGuess = this.data[Math.floor(Math.random() * this.data.length)];
+    this.resetGuess();
+  }
 
   private fetchData(): void {
+    this.loadingService.setLoadingState(true);
     let params = new HttpParams()
     .set('limit', this.pageSize.toString())
     .set('page', this.currentPage.toString());
 
-  this.apiService.getBreeds(params).subscribe({
-    next: (response: Breed[]) => {
-      const shuffledArray = shuffle(response);
-      this.data = shuffledArray.slice(0, 4);
-      this.breedToGuess = this.data[Math.floor(Math.random() * this.data.length)];
-      this.resetGuess();
-    },
-    error: (error) => {
-      console.error(error);
-    }
-  });
+    this.apiService.getBreeds(params).subscribe({
+      next: (response: Breed[]) => {
+        this.loadingService.setLoadingState(true);
+        this.setRandomDog(response);
+        this.loadingService.setLoadingState(false);
+      },
+      error: (error) => {
+        this.loadingService.setLoadingState(false);
+        console.error(error);
+      }
+    });
   }
   
   public ngOnInit(): void {
+    this.loadingService.setLoadingState(true);
     const pointsString = localStorage.getItem('points');
     if (pointsString === null || pointsString === undefined) {
       localStorage.setItem('points', '0');
@@ -69,14 +86,9 @@ export class QuizComponent implements OnInit {
     else {
       this.message = 'You guessed wrong, guess again.';
       this.guessedRight = false;
-      if( this.guesses > -1 && --this.guesses == 0)
-        this.guesses=-1;
+      if( this.guesses > -1 && --this.guesses == 0) {
+        this.guesses =- 1;
+      }
     }
-  }
-
-  private resetGuess(): void {
-    this.message = '';
-    this.guessedRight = false;
-    this.guesses = 3;
   }
 }

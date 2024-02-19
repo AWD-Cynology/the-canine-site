@@ -2,7 +2,7 @@
   <p class="points">Voting points: {{ points }}</p>
   <section class="gallery">
     <div class="container gallery-item" *ngFor="let breed of data">
-      <img src="{{ breed.image.url }}" (click)="displayDetails(breed)">
+      <img src="{{ breed.image.url }}">
       <div>
         <div class="dog-name">
           <span>{{ breed.name }}</span>
