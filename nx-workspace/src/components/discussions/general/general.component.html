@@ -11,7 +11,7 @@
   
     <!-- List of Discussions -->
     <div class="discussion-list">
-      <div *ngFor="let discussion of discussions">
+      <div *ngFor="let discussion of discussions; let i = index">
         <div class="discussion">
           <div class="discussion-info">
             <span class="username">{{ discussion.username }}</span>
@@ -33,8 +33,8 @@
             </div>
             <!-- New Reply Form -->
             <div class="new-reply">
-              <textarea placeholder="Reply to this discussion" [(ngModel)]="discussionReply"></textarea>
-              <button (click)="replyToDiscussion(discussion)">Reply</button>
+              <textarea placeholder="Reply to this discussion" [(ngModel)]="discussionTextAreas[i]"></textarea>
+              <button (click)="replyToDiscussion(discussion, discussionTextAreas[i], i)">Reply</button>
             </div>
           </div>
         </div>

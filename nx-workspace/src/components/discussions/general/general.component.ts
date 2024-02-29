@@ -13,7 +13,7 @@ import { FormsModule } from '@angular/forms';
 export class GeneralForumComponent {
   discussions: Discussion[] = [];
   newDiscussionContent: string = '';
-  discussionReply: string = '';
+  discussionTextAreas: string[] = [];
 
   startDiscussion(): void {
     if (this.newDiscussionContent.trim() !== '') { // Ensure textarea is not empty
@@ -30,16 +30,16 @@ export class GeneralForumComponent {
   }
 
 
-  replyToDiscussion(discussion: Discussion): void {
-    if(this.discussionReply.trim() !== ''){
+  replyToDiscussion(discussion: Discussion, textArea: string, areaIndex: number): void {
+    if(textArea.trim() !== ''){
       const newReply: Reply = {
         username: 'User456', 
         timestamp: new Date(),
-        content: this.discussionReply,
+        content: textArea,
         replies: []
       };
       discussion.replies.push(newReply);
-      this.discussionReply = '';
+      this.discussionTextAreas[areaIndex]='';
     }
   }
 
