@@ -12,6 +12,7 @@ import { Router } from '@angular/router';
 })
 export class UsernameInputComponent {
   @ViewChild('usernameInput') usernameInput!: ElementRef;
+  @ViewChild('passwordInput') passwordInput!: ElementRef;
 
   constructor(
     private router: Router,
@@ -20,17 +21,20 @@ export class UsernameInputComponent {
 
   submitUsername(): void {
     const username = this.usernameInput.nativeElement.value;
+    const password = this.passwordInput.nativeElement.value;
     if (isPlatformBrowser(this.platformId)) {
       const storedUsername = localStorage.getItem('username');
-      if (storedUsername) {
+      const storedPassword = localStorage.getItem('password');
+      if (storedUsername && storedPassword) {
         this.router.navigate(['/home']);
         return;
       }
-      if (username) {
+      if (username || password) {
         localStorage.setItem('username', username);
+        localStorage.setItem('password', password);
         this.router.navigate(['/home']);
       } else {
-        alert('Please enter a username');
+        alert('Please enter a username and password');
       }
     } else {
       console.error('localStorage is not available on the server-side.');
