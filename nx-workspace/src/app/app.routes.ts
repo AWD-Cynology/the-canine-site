@@ -6,6 +6,7 @@ import { HomeComponent } from '../components/home/home.component';
 import { UsernameInputComponent } from '../components/username-input/username-input.component';
 import { AuthGuard } from '../services/auth.guard';
 import { ForumComponent } from '../components/forum/forum.component';
+import { GeneralForumComponent } from '../components/discussions/general/general.component';
 
 
 export const routes: Routes = [
@@ -15,6 +16,7 @@ export const routes: Routes = [
     { path: 'quiz', component: QuizComponent, canActivate: [AuthGuard] },
     { path: 'favorites', component: FavoritesComponent, canActivate: [AuthGuard] },
     { path: 'forum', component: ForumComponent, canActivate: [AuthGuard] },
+    { path: 'discussion/general', component: GeneralForumComponent, canActivate: [AuthGuard] },
     { path: 'enter-username', component: UsernameInputComponent },
 
 ];

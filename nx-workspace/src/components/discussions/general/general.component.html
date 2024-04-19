@@ -1,0 +1,44 @@
+<!-- general-forum.component.html -->
+
+<div class="forum-container">
+    <h2>General Discussion</h2>
+  
+    <!-- New Discussion Form -->
+    <div class="new-discussion">
+      <textarea placeholder="Start a new discussion" [(ngModel)]="newDiscussionContent"></textarea>
+      <button (click)="startDiscussion()">Start Discussion</button>
+    </div>
+  
+    <!-- List of Discussions -->
+    <div class="discussion-list">
+      <div *ngFor="let discussion of discussions; let i = index">
+        <div class="discussion">
+          <div class="discussion-info">
+            <span class="username">{{ discussion.username }}</span>
+            <span class="timestamp">{{ discussion.timestamp | date }}</span>
+          </div>
+          <p class="discussion-content">{{ discussion.content }}</p>
+          <!-- Replies -->
+          <div class="replies">
+            <div *ngFor="let reply of discussion.replies">
+              <div class="reply">
+                <div class="reply-info">
+                  <span class="username">{{ reply.username }}</span>
+                  <span class="timestamp">{{ reply.timestamp | date }}</span>
+                </div>
+                <div class="reply-content">{{ reply.content }}
+                    <button class="reply-button" (click)="replyToReply(reply)">Reply to user</button>
+                </div>
+              </div>
+            </div>
+            <!-- New Reply Form -->
+            <div class="new-reply">
+              <textarea placeholder="Reply to this discussion" [(ngModel)]="discussionTextAreas[i]"></textarea>
+              <button (click)="replyToDiscussion(discussion, discussionTextAreas[i], i)">Reply</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
