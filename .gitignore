@@ -1,0 +1,7 @@
+﻿################################################################################
+# This .gitignore file was automatically created by Microsoft(R) Visual Studio.
+################################################################################
+
+/cynology-backend/.vs
+/cynology-backend/cynology-backend/bin/Debug/net8.0
+/cynology-backend/cynology-backend/obj

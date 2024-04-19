@@ -7,6 +7,8 @@ import { UsernameInputComponent } from '../components/username-input/username-in
 import { AuthGuard } from '../services/auth.guard';
 import { ForumComponent } from '../components/forum/forum.component';
 import { GeneralForumComponent } from '../components/discussions/general/general.component';
+import { LoginComponent } from '../components/login/login.component';
+import { RegisterComponent } from '../components/register/register.component';
 
 
 export const routes: Routes = [
@@ -18,5 +20,7 @@ export const routes: Routes = [
     { path: 'forum', component: ForumComponent, canActivate: [AuthGuard] },
     { path: 'discussion/general', component: GeneralForumComponent, canActivate: [AuthGuard] },
     { path: 'enter-username', component: UsernameInputComponent },
+    { path: 'login', component: LoginComponent },
+    { path: 'register', component: RegisterComponent },
 
 ];
