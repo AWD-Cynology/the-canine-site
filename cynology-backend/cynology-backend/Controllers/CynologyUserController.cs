@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Http;
 using cynology_backend.Models.Identity;
 using Microsoft.AspNetCore.Identity;
+using Newtonsoft.Json;
 
 namespace cynology_backend.Controllers
 {
@@ -18,7 +19,7 @@ namespace cynology_backend.Controllers
             this.signInManager = signInManager;
         }
 
-        [HttpPost("add-user")]
+        [HttpPost("register")]
         public async Task<IActionResult> Register(RegisterModel model)
         {
             var user = new CynologyUser()
@@ -46,10 +47,29 @@ namespace cynology_backend.Controllers
                   lockoutOnFailure: false
                   );
             if (signInResult.Succeeded)
-            {   
-                return Ok("You are successfully logged in");
+            {
+                var user = await userManager.FindByNameAsync(model.Username);
+                if (user != null)
+                {
+                    
+                    var userData = new
+                    {
+                        Username = user.UserName,
+                        Name = user.Name,
+                        Surname = user.Surname
+                    };
+
+                    return Ok(userData);
+                }
+                else
+                {
+                    return BadRequest("User not found");
+                }
             }
-            return BadRequest("Error occured");
+            else
+            {
+                return BadRequest("Invalid credentials");
+            }
         }
     }
 }

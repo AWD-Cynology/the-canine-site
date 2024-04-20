@@ -6,8 +6,9 @@
     <h1 class="title">Cynology Website</h1>
     <p>Your ultimate guide to everything about dogs!</p>
     <div class="header-content">
-        <span>Welcome, dog lover: {{ username }}</span>
-        <a type="button" href="/login">Login</a>
+        <span *ngIf="name && surname">Welcome, dog lover: {{ name + ' ' + surname }}</span>
+        <a *ngIf="!username" type="button" href="/login">Login</a>
+        <a *ngIf="username" type="button" (click)="onLogout()">Logout</a>
     </div>
 </header>
 <nav>

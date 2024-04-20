@@ -4,6 +4,7 @@ import { RouterOutlet } from '@angular/router';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { LoadingService } from '../services/loading.service';
 import { Subscription } from 'rxjs';
+import { Router } from '@angular/router'
 
 @Component({
   selector: 'app-root',
@@ -14,11 +15,13 @@ import { Subscription } from 'rxjs';
 })
 export class AppComponent implements OnInit, OnDestroy {
   public username: string = '';
+  public name: string = '';
+  public surname: string = '';
   public title: string = 'The Canine Site';
   public isLoading: boolean = false;
   private loading$: Subscription;
 
-  constructor(@Inject(PLATFORM_ID) private platformId: Object, private loadingService: LoadingService) {
+  constructor(@Inject(PLATFORM_ID) private platformId: Object, private loadingService: LoadingService, private router: Router) {
     this.loading$ = this.loadingService.isLoading$.subscribe(isLoading => {
       this.isLoading = isLoading;
     });
@@ -26,12 +29,19 @@ export class AppComponent implements OnInit, OnDestroy {
 
   public ngOnInit(): void {
     if (isPlatformBrowser(this.platformId)) {
-      let user = (localStorage.getItem('username') || "");
-      this.username = user;
+      this.username = (sessionStorage.getItem('Username') || "");
+      this.name = (sessionStorage.getItem("Name") || "");
+      this.surname = (sessionStorage.getItem("Surname") || "");
     }
   }
 
   public ngOnDestroy(): void {
     this.loading$.unsubscribe();
+  }
+
+  onLogout(){
+    sessionStorage.clear();
+    localStorage.clear();
+    window.location.href = "/";
   }
 }
