@@ -19,9 +19,17 @@ export class LoginComponent {
   }
   onLogin(){
     this.http.post("https://localhost:7020/api/CynologyUser/login", this.loginObj, { responseType: 'text' }).subscribe((res:any) =>{
-      if (res && res === "You are successfully logged in") {
+      if (res) {
         alert("Successful Login");
-        this.router.navigate(['/']);
+        
+        const userData = JSON.parse(res);
+        
+        sessionStorage.setItem('Username', userData.username);
+        sessionStorage.setItem('Name', userData.name);
+        sessionStorage.setItem('Surname', userData.surname);
+        sessionStorage.setItem('', userData.surname);
+
+        window.location.href = "/";
       } else
         alert("Invalid Login");
     });
