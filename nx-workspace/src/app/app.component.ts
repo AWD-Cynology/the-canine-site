@@ -4,7 +4,6 @@ import { RouterOutlet } from '@angular/router';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { LoadingService } from '../services/loading.service';
 import { Subscription } from 'rxjs';
-import { Router } from '@angular/router'
 
 @Component({
   selector: 'app-root',
@@ -22,18 +21,20 @@ export class AppComponent implements OnInit, OnDestroy {
   public surname: string = '';
   public title: string = 'The Canine Site';
 
-  public constructor(@Inject(PLATFORM_ID) private platformId: Object, private loadingService: LoadingService, private router: Router) {
+  public constructor(@Inject(PLATFORM_ID) private platformId: Object, private loadingService: LoadingService) {
     this.loading$ = this.loadingService.isLoading$.subscribe(isLoading => {
       this.isLoading = isLoading;
     });
   }
 
   public ngOnInit(): void {
+    this.isLoading = true;
     if (isPlatformBrowser(this.platformId)) {
       this.username = (sessionStorage.getItem('Username') || "");
       this.name = (sessionStorage.getItem("Name") || "");
       this.surname = (sessionStorage.getItem("Surname") || "");
     }
+    this.isLoading = false;
   }
 
   public ngOnDestroy(): void {
@@ -43,6 +44,7 @@ export class AppComponent implements OnInit, OnDestroy {
   public onLogout(){
     sessionStorage.clear();
     localStorage.clear();
-    this.router.navigate(['/']);
+
+    window.location.href = '/';
   }
 }
