@@ -1,12 +1,12 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { HttpClient, HttpClientModule } from '@angular/common/http';
+import { HttpClientModule } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router'
 import { isEmpty } from 'lodash';
 import { RegisterModel, UserModel } from '../../models/user.model';
 import { ApiService } from '../../services/api-service.service';
-import { error } from 'console';
+import { LoadingService } from '../../services/loading.service';
 
 @Component({
   selector: 'app-register',
@@ -21,28 +21,31 @@ export class RegisterComponent {
   public passwordMismatch: boolean = false;
   public registerFormIsValid: boolean = true;
 
-  public constructor(private http: HttpClient, private router: Router, private apiService: ApiService) { }
+  public constructor(private router: Router, private apiService: ApiService, private loadingService: LoadingService) { }
 
   public onRegister(){
+    this.loadingService.setLoadingState(true);
     this.registerFormIsValid = true;
 
     if(isEmpty(this.registerObject.username) || isEmpty(this.registerObject.password)){
       this.registerFormIsValid = false;
+      this.loadingService.setLoadingState(false);
       return;
     }
 
     if (this.confirmPassword !== this.registerObject.password) {
       this.passwordMismatch = true;
+      this.loadingService.setLoadingState(false);
       return; // Do not proceed with registration if passwords do not match
     }
 
     this.apiService.register(this.registerObject).subscribe({
       next: (result: UserModel) => {
-        console.log(result);
+        this.loadingService.setLoadingState(false);
         this.router.navigate(['/login']);
       },
       error: (error) => {
-        console.log(error);
+        this.loadingService.setLoadingState(false);
         alert("Invalid register credentials!");
       }
     });
