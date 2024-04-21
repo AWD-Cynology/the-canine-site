@@ -1,75 +1,74 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Http;
 using cynology_backend.Models.Identity;
 using Microsoft.AspNetCore.Identity;
-using Newtonsoft.Json;
 
-namespace cynology_backend.Controllers
+namespace cynology_backend.Controllers;
+
+[Route("api/CynologyUser")]
+[ApiController]
+public class CynologyUserController : ControllerBase
 {
-    [Route("api/CynologyUser")]
-    [ApiController]
-    public class CynologyUserController : ControllerBase
+    private readonly UserManager<CynologyUser> userManager;
+    private readonly SignInManager<CynologyUser> signInManager;
+
+    public CynologyUserController(UserManager<CynologyUser> userManager, SignInManager<CynologyUser> signInManager)
     {
-        private readonly UserManager<CynologyUser> userManager;
-        private readonly SignInManager<CynologyUser> signInManager;
+        this.userManager = userManager;
+        this.signInManager = signInManager;
+    }
 
-        public CynologyUserController(UserManager<CynologyUser> userManager, SignInManager<CynologyUser> signInManager)
+    [HttpPost("register")]
+    public async Task<IActionResult> Register(RegisterModel model)
+    {
+        CynologyUser user = new CynologyUser
         {
-            this.userManager = userManager;
-            this.signInManager = signInManager;
+            Name = model.Name,
+            Surname = model.Surname,
+            Address = model.Address,
+            UserName = model.Username,
+            PasswordHash = model.Password,
+        };
+
+        IdentityResult result = await userManager.CreateAsync(user, user.PasswordHash!);
+        if (result.Succeeded)
+        {
+            return Ok("Registration made successfully");
         }
 
-        [HttpPost("register")]
-        public async Task<IActionResult> Register(RegisterModel model)
+        return BadRequest($"Error occured: {result.Errors}");
+    }
+
+    [HttpPost("login")]
+    public async Task<IActionResult> Login([FromBody] LoginModel model)
+    {
+        Microsoft.AspNetCore.Identity.SignInResult result = await signInManager.PasswordSignInAsync(
+            userName: model.Username,
+            password: model.Password,
+            isPersistent: true,
+            lockoutOnFailure: false);
+
+        if (result.Succeeded)
         {
-            var user = new CynologyUser()
+            CynologyUser? user = await userManager.FindByNameAsync(model.Username);
+            if (user != null)
             {
-                Name = model.Name,
-                Surname = model.Surname,
-                Address = model.Address,
-                UserName = model.Username,
-                PasswordHash = model.Password,
-            };
-            var result = await userManager.CreateAsync(user, user.PasswordHash!);
-            if (result.Succeeded)
-                return Ok("Registration made successfully");
-
-            return BadRequest("Error occured");
-        }
-
-        [HttpPost("login")]
-        public async Task<IActionResult> Login([FromBody] LoginModel model)
-        {
-            var signInResult = await signInManager.PasswordSignInAsync(
-                  userName: model.Username,
-                  password: model.Password,
-                  isPersistent: true,
-                  lockoutOnFailure: false
-                  );
-            if (signInResult.Succeeded)
-            {
-                var user = await userManager.FindByNameAsync(model.Username);
-                if (user != null)
+                CynologyUser userData = new CynologyUser
                 {
-                    
-                    var userData = new
-                    {
-                        Username = user.UserName,
-                        Name = user.Name,
-                        Surname = user.Surname
-                    };
+                    UserName = user.UserName,
+                    Name = user.Name,
+                    Surname = user.Surname
+                };
 
-                    return Ok(userData);
-                }
-                else
-                {
-                    return BadRequest("User not found");
-                }
+                return Ok(userData);
             }
             else
             {
-                return BadRequest("Invalid credentials");
+                return BadRequest($"User not found, result: {result}");
             }
+        }
+        else
+        {
+            return BadRequest($"Invalid credentials, result: {result}");
         }
     }
 }

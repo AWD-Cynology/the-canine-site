@@ -1,8 +1,10 @@
-import { HttpClient } from '@angular/common/http';
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { Router } from '@angular/router'
+import { LoginModel, UserModel } from '../../models/user.model';
+import { ApiService } from '../../services/api-service.service';
+import { LoadingService } from '../../services/loading.service';
 
 @Component({
   selector: 'app-login',
@@ -12,36 +14,24 @@ import { Router } from '@angular/router'
   styleUrl: './login.component.css'
 })
 export class LoginComponent {
+  public loginObject: LoginModel = new LoginModel();
 
-  loginObj: Login;
-  constructor(private http: HttpClient, private router: Router){
-    this.loginObj = new Login();
-  }
-  onLogin(){
-    this.http.post("https://localhost:7020/api/CynologyUser/login", this.loginObj, { responseType: 'text' }).subscribe((res:any) =>{
-      if (res) {
-        alert("Successful Login");
-        
-        const userData = JSON.parse(res);
-        
-        sessionStorage.setItem('Username', userData.username);
-        sessionStorage.setItem('Name', userData.name);
-        sessionStorage.setItem('Surname', userData.surname);
-        sessionStorage.setItem('', userData.surname);
+  public constructor(private router: Router, private apiService: ApiService, private loadingService: LoadingService) {}
 
-        window.location.href = "/";
-      } else
-        alert("Invalid Login");
+  public onLogin() {
+    this.loadingService.setLoadingState(true);
+    this.apiService.login(this.loginObject).subscribe({
+      next: (result: UserModel) => {
+        sessionStorage.setItem('Username', result.username);
+        sessionStorage.setItem('Name', result.name);
+        sessionStorage.setItem('Surname', result.surname);
+
+        this.router.navigate(['/']);
+      },
+      error: error => {
+        this.loadingService.setLoadingState(false);
+        alert('Invalid login credentials');
+      }
     });
-  }
-}
-
-export class Login{
-  username: string
-  password: string
-
-  constructor(){
-    this.username = "";
-    this.password = "";
   }
 }

@@ -42,6 +42,6 @@ export class AppComponent implements OnInit, OnDestroy {
   onLogout(){
     sessionStorage.clear();
     localStorage.clear();
-    window.location.href = "/";
+    this.router.navigate(['/']);
   }
 }
