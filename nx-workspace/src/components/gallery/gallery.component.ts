@@ -3,7 +3,7 @@ import { HttpParams } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { Breed, FavoriteDog } from '../../models/dog.model';
 import { forkJoin } from 'rxjs';
-import { ApiService } from '../../services/api-service.service';
+import { ApiService } from '../../services/api.service';
 import { LoadingService } from '../../services/loading.service';
 
 @Component({

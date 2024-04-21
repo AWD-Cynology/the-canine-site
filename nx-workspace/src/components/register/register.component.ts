@@ -5,7 +5,7 @@ import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router'
 import { isEmpty } from 'lodash';
 import { RegisterModel, UserModel } from '../../models/user.model';
-import { ApiService } from '../../services/api-service.service';
+import { ApiService } from '../../services/api.service';
 import { LoadingService } from '../../services/loading.service';
 
 @Component({

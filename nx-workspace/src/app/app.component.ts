@@ -14,14 +14,15 @@ import { Router } from '@angular/router'
   styleUrls: ['./app.component.css']
 })
 export class AppComponent implements OnInit, OnDestroy {
+  private loading$: Subscription;
+
+  public isLoading: boolean = false;
   public username: string = '';
   public name: string = '';
   public surname: string = '';
   public title: string = 'The Canine Site';
-  public isLoading: boolean = false;
-  private loading$: Subscription;
 
-  constructor(@Inject(PLATFORM_ID) private platformId: Object, private loadingService: LoadingService, private router: Router) {
+  public constructor(@Inject(PLATFORM_ID) private platformId: Object, private loadingService: LoadingService, private router: Router) {
     this.loading$ = this.loadingService.isLoading$.subscribe(isLoading => {
       this.isLoading = isLoading;
     });
@@ -39,7 +40,7 @@ export class AppComponent implements OnInit, OnDestroy {
     this.loading$.unsubscribe();
   }
 
-  onLogout(){
+  public onLogout(){
     sessionStorage.clear();
     localStorage.clear();
     this.router.navigate(['/']);

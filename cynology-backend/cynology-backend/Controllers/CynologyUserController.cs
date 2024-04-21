@@ -71,4 +71,10 @@ public class CynologyUserController : ControllerBase
             return BadRequest($"Invalid credentials, result: {result}");
         }
     }
+
+    [HttpGet("is-authenticated")]
+    public IActionResult IsAuthenticated()
+    {
+        return Ok(User.Identity.IsAuthenticated);
+    }
 }

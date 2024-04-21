@@ -3,7 +3,7 @@ import { FormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { Router } from '@angular/router'
 import { LoginModel, UserModel } from '../../models/user.model';
-import { ApiService } from '../../services/api-service.service';
+import { ApiService } from '../../services/api.service';
 import { LoadingService } from '../../services/loading.service';
 
 @Component({

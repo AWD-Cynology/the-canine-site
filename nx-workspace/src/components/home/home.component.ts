@@ -1,7 +1,7 @@
 import { HttpParams } from '@angular/common/http';
 import { Component, ElementRef, OnInit, Renderer2, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
-import { ApiService } from '../../services/api-service.service';
+import { ApiService } from '../../services/api.service';
 import { forkJoin } from 'rxjs';
 import { LoadingService } from '../../services/loading.service';
 
