@@ -4,7 +4,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { Router } from '@angular/router'
 import { LoginModel, UserModel } from '../../models/user.model';
 import { LoadingService } from '../../services/loading.service';
-import { LoginService } from '../../services/login.service';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-login',
@@ -16,11 +16,11 @@ import { LoginService } from '../../services/login.service';
 export class LoginComponent {
   public loginObject: LoginModel = new LoginModel();
 
-  public constructor(private router: Router, private loginService: LoginService, private loadingService: LoadingService) {}
+  public constructor(private router: Router, private authService: AuthService, private loadingService: LoadingService) {}
 
   public onLogin() {
     this.loadingService.setLoadingState(true);
-    this.loginService.login(this.loginObject).subscribe({
+    this.authService.login(this.loginObject).subscribe({
       next: (result: UserModel) => {
         sessionStorage.setItem('Username', result.username);
         sessionStorage.setItem('Name', result.name);

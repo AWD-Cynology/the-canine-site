@@ -6,7 +6,7 @@ import { Observable } from 'rxjs';
 @Injectable({
   providedIn: 'root'
 })
-export class LoginService {
+export class AuthService {
   private loginUrl = 'https://localhost:7020/api/CynologyUser/login';
   private registerUrl = 'https://localhost:7020/api/CynologyUser/register';
 

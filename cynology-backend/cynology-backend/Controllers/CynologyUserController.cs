@@ -52,14 +52,7 @@ public class CynologyUserController : ControllerBase
             CynologyUser? user = await userManager.FindByNameAsync(model.Username);
             if (user != null)
             {
-                CynologyUser userData = new CynologyUser
-                {
-                    UserName = user.UserName,
-                    Name = user.Name,
-                    Surname = user.Surname
-                };
-
-                return Ok(userData);
+                return Ok(user);
             }
             else
             {
