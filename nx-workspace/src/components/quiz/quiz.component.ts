@@ -2,7 +2,7 @@ import { CommonModule } from '@angular/common';
 import { HttpParams } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { Breed } from '../../models/dog.model';
-import { ApiService } from '../../services/api-service.service';
+import { ApiService } from '../../services/api.service';
 import { shuffle } from 'lodash';
 import { LoadingService } from '../../services/loading.service';
 

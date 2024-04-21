@@ -3,11 +3,11 @@
     <form id="loginForm">
         <div class="form-group">
             <label for="username">Username</label>
-            <input type="text" [(ngModel)]="loginObj.username" id="username" name="username" required>
+            <input type="text" [(ngModel)]="loginObject.username" id="username" name="username" required>
         </div>
         <div class="form-group">
             <label for="password">Password</label>
-            <input type="password" [(ngModel)]="loginObj.password" id="password" name="password" required>
+            <input type="password" [(ngModel)]="loginObject.password" id="password" name="password" required>
         </div>
         <input type="submit" (click)="onLogin()" value="Login">
     </form>

@@ -5,3 +5,9 @@
 /cynology-backend/.vs
 /cynology-backend/cynology-backend/bin/Debug/net8.0
 /cynology-backend/cynology-backend/obj
+*.wsuo
+/.vs/the-canine-site/v17/DocumentLayout.json
+/.vs/VSWorkspaceState.json
+*.sqlite
+*.vsidx
+*.node

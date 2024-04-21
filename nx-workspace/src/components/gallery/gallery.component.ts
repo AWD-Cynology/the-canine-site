@@ -3,7 +3,7 @@ import { HttpParams } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { Breed, FavoriteDog } from '../../models/dog.model';
 import { forkJoin } from 'rxjs';
-import { ApiService } from '../../services/api-service.service';
+import { ApiService } from '../../services/api.service';
 import { LoadingService } from '../../services/loading.service';
 
 @Component({
@@ -109,7 +109,7 @@ export class GalleryComponent implements OnInit {
   public vote(vote: number, breed: Breed): void {
     this.loadingService.setLoadingState(true);
     const availablePoints  = parseInt(localStorage.getItem('points') || '0', 10);
-    const username = localStorage.getItem('username') || '';
+    const username = sessionStorage.getItem('Username') || '';
 
     if (availablePoints <= 0) {
       console.log("You don't have enough points to vote.");

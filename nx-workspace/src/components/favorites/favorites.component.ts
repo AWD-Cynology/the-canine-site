@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { Dog, FavoriteDog } from '../../models/dog.model';
-import { ApiService } from '../../services/api-service.service';
+import { ApiService } from '../../services/api.service';
 import { LoadingService } from '../../services/loading.service';
 
 @Component({
