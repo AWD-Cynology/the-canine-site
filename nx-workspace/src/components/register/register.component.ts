@@ -5,8 +5,8 @@ import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router'
 import { isEmpty } from 'lodash';
 import { RegisterModel, UserModel } from '../../models/user.model';
-import { ApiService } from '../../services/api.service';
 import { LoadingService } from '../../services/loading.service';
+import { LoginService } from '../../services/login.service';
 
 @Component({
   selector: 'app-register',
@@ -21,7 +21,7 @@ export class RegisterComponent {
   public passwordMismatch: boolean = false;
   public registerFormIsValid: boolean = true;
 
-  public constructor(private router: Router, private apiService: ApiService, private loadingService: LoadingService) { }
+  public constructor(private router: Router, private loginService: LoginService, private loadingService: LoadingService) { }
 
   public onRegister(){
     this.loadingService.setLoadingState(true);
@@ -39,7 +39,7 @@ export class RegisterComponent {
       return; // Do not proceed with registration if passwords do not match
     }
 
-    this.apiService.register(this.registerObject).subscribe({
+    this.loginService.register(this.registerObject).subscribe({
       next: (result: UserModel) => {
         this.loadingService.setLoadingState(false);
         this.router.navigate(['/login']);

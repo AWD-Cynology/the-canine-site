@@ -3,8 +3,8 @@ import { FormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { Router } from '@angular/router'
 import { LoginModel, UserModel } from '../../models/user.model';
-import { ApiService } from '../../services/api.service';
 import { LoadingService } from '../../services/loading.service';
+import { LoginService } from '../../services/login.service';
 
 @Component({
   selector: 'app-login',
@@ -16,11 +16,11 @@ import { LoadingService } from '../../services/loading.service';
 export class LoginComponent {
   public loginObject: LoginModel = new LoginModel();
 
-  public constructor(private router: Router, private apiService: ApiService, private loadingService: LoadingService) {}
+  public constructor(private router: Router, private loginService: LoginService, private loadingService: LoadingService) {}
 
   public onLogin() {
     this.loadingService.setLoadingState(true);
-    this.apiService.login(this.loginObject).subscribe({
+    this.loginService.login(this.loginObject).subscribe({
       next: (result: UserModel) => {
         sessionStorage.setItem('Username', result.username);
         sessionStorage.setItem('Name', result.name);
