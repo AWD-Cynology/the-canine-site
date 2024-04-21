@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { Breed, Dog, FavoriteDog } from '../models/dog.model';
 import { Vote } from '../models/vote.model';
-import { LoginModel, UserModel } from '../models/user.model';
+import { LoginModel, RegisterModel, UserModel } from '../models/user.model';
 
 @Injectable({
   providedIn: 'root'
@@ -16,7 +16,9 @@ export class ApiService {
   private getDogUrl = 'https://api.thedogapi.com/v1/images/';
   private favoritesUrl = 'https://api.thedogapi.com/v1/favourites/';
   private votesUrl = 'https://api.thedogapi.com/v1/votes/';
+
   private loginUrl = 'https://localhost:7020/api/CynologyUser/login';
+  private registerUrl = 'https://localhost:7020/api/CynologyUser/register';
 
   constructor(private http: HttpClient) { }
 
@@ -50,5 +52,9 @@ export class ApiService {
 
   public login(loginObject: LoginModel): Observable<UserModel> {
     return this.http.post<UserModel>(this.loginUrl, loginObject);
+  }
+
+  public register(registerObject: RegisterModel): Observable<UserModel> {
+    return this.http.post<UserModel>(this.registerUrl, registerObject);
   }
 }

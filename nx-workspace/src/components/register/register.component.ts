@@ -4,6 +4,9 @@ import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router'
 import { isEmpty } from 'lodash';
+import { RegisterModel, UserModel } from '../../models/user.model';
+import { ApiService } from '../../services/api-service.service';
+import { error } from 'console';
 
 @Component({
   selector: 'app-register',
@@ -13,52 +16,35 @@ import { isEmpty } from 'lodash';
   styleUrl: './register.component.css'
 })
 export class RegisterComponent {
+  public registerObject: RegisterModel = new RegisterModel();
+  public confirmPassword: string = '';
+  public passwordMismatch: boolean = false;
+  public registerFormIsValid: boolean = true;
 
-  registerObj: Register;
-  confirmPassword: string = '';
-  passwordMismatch: boolean = false;
-  registerFormIsValid: boolean = true;
+  public constructor(private http: HttpClient, private router: Router, private apiService: ApiService) { }
 
-  constructor(private http: HttpClient, private router: Router){
-    this.registerObj = new Register();
-  }
-
-  onRegister(){
+  public onRegister(){
     this.registerFormIsValid = true;
 
-    if(isEmpty(this.registerObj.username) || isEmpty(this.registerObj.password)){
+    if(isEmpty(this.registerObject.username) || isEmpty(this.registerObject.password)){
       this.registerFormIsValid = false;
-      // alert("Username field must not be empty");
       return;
     }
 
-    if (this.confirmPassword !== this.registerObj.password) {
+    if (this.confirmPassword !== this.registerObject.password) {
       this.passwordMismatch = true;
-      // alert("Passwords do not match");
       return; // Do not proceed with registration if passwords do not match
     }
 
-    this.http.post("https://localhost:7020/api/CynologyUser/register", this.registerObj, { responseType: 'text' }).subscribe((res:any) =>{
-      if (res && res === "Registration made successfully") {
+    this.apiService.register(this.registerObject).subscribe({
+      next: (result: UserModel) => {
+        console.log(result);
         this.router.navigate(['/login']);
-      } else
+      },
+      error: (error) => {
+        console.log(error);
         alert("Invalid register credentials!");
+      }
     });
-  }
-}
-
-export class Register{
-  name: string
-  surname: string
-  address: string
-  username: string
-  password: string
-
-  constructor(){
-    this.name = "";
-    this.surname = "";
-    this.address = "";
-    this.username = "";
-    this.password = "";
   }
 }

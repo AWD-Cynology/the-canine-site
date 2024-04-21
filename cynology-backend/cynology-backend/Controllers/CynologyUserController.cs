@@ -32,7 +32,7 @@ public class CynologyUserController : ControllerBase
         IdentityResult result = await userManager.CreateAsync(user, user.PasswordHash!);
         if (result.Succeeded)
         {
-            return Ok("Registration made successfully");
+            return Ok(user);
         }
 
         return BadRequest($"Error occured: {result.Errors}");
