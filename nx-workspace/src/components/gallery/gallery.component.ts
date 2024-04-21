@@ -109,7 +109,7 @@ export class GalleryComponent implements OnInit {
   public vote(vote: number, breed: Breed): void {
     this.loadingService.setLoadingState(true);
     const availablePoints  = parseInt(localStorage.getItem('points') || '0', 10);
-    const username = localStorage.getItem('username') || '';
+    const username = sessionStorage.getItem('Username') || '';
 
     if (availablePoints <= 0) {
       console.log("You don't have enough points to vote.");

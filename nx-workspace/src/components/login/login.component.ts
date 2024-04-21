@@ -22,7 +22,7 @@ export class LoginComponent {
     this.loadingService.setLoadingState(true);
     this.authService.login(this.loginObject).subscribe({
       next: (result: UserModel) => {
-        sessionStorage.setItem('Username', result.username);
+        sessionStorage.setItem('Username', result.userName);
         sessionStorage.setItem('Name', result.name);
         sessionStorage.setItem('Surname', result.surname);
 

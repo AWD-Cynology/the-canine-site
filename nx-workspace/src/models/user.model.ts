@@ -12,7 +12,7 @@ export class RegisterModel {
 }
 
 export class UserModel {
-  public username: string = '';
+  public userName: string = '';
   public name: string = '';
   public surname: string = '';
 }
