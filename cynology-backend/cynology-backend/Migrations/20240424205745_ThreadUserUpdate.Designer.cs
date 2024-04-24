@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using cynology_backend.Data;
 
@@ -11,9 +12,11 @@ using cynology_backend.Data;
 namespace cynology_backend.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20240424205745_ThreadUserUpdate")]
+    partial class ThreadUserUpdate
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -255,7 +258,7 @@ namespace cynology_backend.Migrations
 
                     b.HasIndex("ThreadId");
 
-                    b.ToTable("Replies");
+                    b.ToTable("Replys");
                 });
 
             modelBuilder.Entity("cynology_backend.Models.Thread", b =>

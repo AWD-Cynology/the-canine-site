@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using cynology_backend.Data;
 
@@ -11,9 +12,11 @@ using cynology_backend.Data;
 namespace cynology_backend.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20240424190833_CommentToReply")]
+    partial class CommentToReply
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -229,6 +232,33 @@ namespace cynology_backend.Migrations
                     b.ToTable("AspNetUsers", (string)null);
                 });
 
+            modelBuilder.Entity("cynology_backend.Models.RepliesToReply", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateOnly>("DatePosted")
+                        .HasColumnType("date");
+
+                    b.Property<Guid>("ReplyId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Text")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("RepliesToReplies");
+                });
+
             modelBuilder.Entity("cynology_backend.Models.Reply", b =>
                 {
                     b.Property<Guid>("Id")
@@ -238,8 +268,8 @@ namespace cynology_backend.Migrations
                     b.Property<Guid?>("CommentToReply")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<DateTime>("DatePosted")
-                        .HasColumnType("datetime2");
+                    b.Property<DateOnly>("DatePosted")
+                        .HasColumnType("date");
 
                     b.Property<string>("Text")
                         .IsRequired()
@@ -255,7 +285,7 @@ namespace cynology_backend.Migrations
 
                     b.HasIndex("ThreadId");
 
-                    b.ToTable("Replies");
+                    b.ToTable("Replys");
                 });
 
             modelBuilder.Entity("cynology_backend.Models.Thread", b =>
@@ -265,11 +295,10 @@ namespace cynology_backend.Migrations
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("CynologyUserId")
-                        .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<DateTime>("DatePosted")
-                        .HasColumnType("datetime2");
+                    b.Property<DateOnly>("DatePosted")
+                        .HasColumnType("date");
 
                     b.Property<string>("Text")
                         .IsRequired()
@@ -357,6 +386,17 @@ namespace cynology_backend.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("cynology_backend.Models.RepliesToReply", b =>
+                {
+                    b.HasOne("cynology_backend.Models.Identity.CynologyUser", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("cynology_backend.Models.Reply", b =>
                 {
                     b.HasOne("cynology_backend.Models.Thread", null)
@@ -370,9 +410,7 @@ namespace cynology_backend.Migrations
                 {
                     b.HasOne("cynology_backend.Models.Identity.CynologyUser", null)
                         .WithMany("Threads")
-                        .HasForeignKey("CynologyUserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("CynologyUserId");
 
                     b.HasOne("cynology_backend.Models.Topic", null)
                         .WithMany("Threads")
