@@ -11,3 +11,5 @@
 *.sqlite
 *.vsidx
 *.node
+/.vs/the-canine-site/v17/Browse.VC.db
+/.vs/ProjectSettings.json
