@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using cynology_backend.Models.Identity;
 using Microsoft.AspNetCore.Identity;
+using cynology_backend.Data;
 
 namespace cynology_backend.Controllers;
 
@@ -10,11 +11,13 @@ public class CynologyUserController : ControllerBase
 {
     private readonly UserManager<CynologyUser> userManager;
     private readonly SignInManager<CynologyUser> signInManager;
+    private readonly DataContext _dataContext;
 
-    public CynologyUserController(UserManager<CynologyUser> userManager, SignInManager<CynologyUser> signInManager)
+    public CynologyUserController(UserManager<CynologyUser> userManager, SignInManager<CynologyUser> signInManager, DataContext dataContext)
     {
         this.userManager = userManager;
         this.signInManager = signInManager;
+        _dataContext = dataContext;
     }
 
     [HttpPost("register")]
