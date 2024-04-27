@@ -2,6 +2,11 @@
 using cynology_backend.Models.Identity;
 using Microsoft.AspNetCore.Identity;
 using cynology_backend.Data;
+using static cynology_backend.Models.Identity.ServiceResponses;
+using Microsoft.IdentityModel.Tokens;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using System.Text;
 
 namespace cynology_backend.Controllers;
 
@@ -12,12 +17,14 @@ public class CynologyUserController : ControllerBase
     private readonly UserManager<CynologyUser> userManager;
     private readonly SignInManager<CynologyUser> signInManager;
     private readonly DataContext _dataContext;
+    private readonly IConfiguration config;
 
-    public CynologyUserController(UserManager<CynologyUser> userManager, SignInManager<CynologyUser> signInManager, DataContext dataContext)
+    public CynologyUserController(UserManager<CynologyUser> userManager, SignInManager<CynologyUser> signInManager, DataContext dataContext, IConfiguration config)
     {
         this.userManager = userManager;
         this.signInManager = signInManager;
         _dataContext = dataContext;
+        this.config = config;
     }
 
     [HttpPost("register")]
@@ -53,9 +60,12 @@ public class CynologyUserController : ControllerBase
         if (result.Succeeded)
         {
             CynologyUser? user = await userManager.FindByNameAsync(model.Username);
+            var userSession = new UserSession(user.Id, user.Name, user.Surname, user.UserName);
+            string token = GenerateToken(userSession);
+
             if (user != null)
-            {
-                return Ok(user);
+            {             
+                return Ok(new LoginResponse(true, token!, "LoginCompleted", userSession));
             }
             else
             {
@@ -66,5 +76,26 @@ public class CynologyUserController : ControllerBase
         {
             return BadRequest($"Invalid credentials, result: {result}");
         }
+    }
+
+    private string GenerateToken(UserSession userSession)
+    {
+        var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(config["Jwt:Key"]!));
+        var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
+        var userClaims = new[]
+        {
+                new Claim(ClaimTypes.NameIdentifier, userSession.Id),
+                new Claim("Firstname", userSession.Name),
+                new Claim("Surname", userSession.Surname),
+                new Claim(ClaimTypes.Name , userSession.Username)
+            };
+        var token = new JwtSecurityToken(
+            issuer: config["Jwt:Issuer"],
+            audience: config["Jwt:Audience"],
+            claims: userClaims,
+            expires: DateTime.Now.AddMinutes(30),
+            signingCredentials: credentials
+            );
+        return new JwtSecurityTokenHandler().WriteToken(token);
     }
 }

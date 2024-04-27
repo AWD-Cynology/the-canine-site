@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
-import { LoginModel, RegisterModel, UserModel } from '../models/user.model';
+import { LoginRequest, LoginResponse, RegisterModel, UserModel } from '../models/user.model';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Observable, map } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -12,8 +12,16 @@ export class AuthService {
 
   public constructor(private http: HttpClient) { }
 
-  public login(loginObject: LoginModel): Observable<UserModel> {
-    return this.http.post<UserModel>(this.loginUrl, loginObject);
+  public login(request: LoginRequest): Observable<LoginResponse> {
+    return this.http.post<LoginResponse>(this.loginUrl, request)
+      .pipe(map(response =>{
+          localStorage.setItem('accessToken', response.token);
+          return response;
+      }));
+  }
+
+  public isLoggedIn(){
+    return localStorage.getItem('accessToken') !== null;
   }
 
   public register(registerObject: RegisterModel): Observable<UserModel> {

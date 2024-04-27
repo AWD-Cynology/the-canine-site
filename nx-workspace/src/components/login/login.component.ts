@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
-import { LoginModel, UserModel } from '../../models/user.model';
+import { LoginRequest, UserModel } from '../../models/user.model';
 import { LoadingService } from '../../services/loading.service';
 import { AuthService } from '../../services/auth.service';
 
@@ -13,17 +13,22 @@ import { AuthService } from '../../services/auth.service';
   styleUrl: './login.component.css'
 })
 export class LoginComponent {
-  public loginObject: LoginModel = new LoginModel();
+  public loginObject: LoginRequest = {
+    username: "",
+    password: ""
+  };
 
   public constructor(private authService: AuthService, private loadingService: LoadingService) {}
+
+  public isLoggedIn(){return this.authService.isLoggedIn();}
 
   public onLogin() {
     this.loadingService.setLoadingState(true);
     this.authService.login(this.loginObject).subscribe({
-      next: (result: UserModel) => {
-        sessionStorage.setItem('Username', result.userName);
-        sessionStorage.setItem('Name', result.name);
-        sessionStorage.setItem('Surname', result.surname);
+      next: (result: any) => {
+        sessionStorage.setItem('Username', result.userSession.username);
+        sessionStorage.setItem('Name', result.userSession.name);
+        sessionStorage.setItem('Surname', result.userSession.surname);
 
         window.location.href = '/';
       },

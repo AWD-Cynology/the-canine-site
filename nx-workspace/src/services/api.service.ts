@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { Breed, Dog, FavoriteDog } from '../models/dog.model';
 import { Vote } from '../models/vote.model';
+import { Thread, Reply, ThreadDTO, ReplyDTO } from '../models/forum.model';
 
 @Injectable({
   providedIn: 'root'
@@ -16,8 +17,32 @@ export class ApiService {
   private favoritesUrl = 'https://api.thedogapi.com/v1/favourites/';
   private votesUrl = 'https://api.thedogapi.com/v1/votes/';
 
+  //////////////
+  private getThreadsForTopicUrl = 'https://localhost:7020/api/Forum/GetThreadsForTopic'; //string topicId
+  private getRepliesForThreadUrl = 'https://localhost:7020/api/Forum/GetRepliesForThreadId'; //string threadId
+  private commentToReplyUrl = 'https://localhost:7020/api/Forum/CommentToReply'; //string commentId, [FromBody] ReplyDTO (text, datePosted)
+  private replyToThreadUrl = 'https://localhost:7020/api/Forum/ReplyToThread'; //string threadId, [FromBody] ReplyDTO (text, datePosted)
+  private newThreadUrl = 'https://localhost:7020/api/Forum/NewThread'; // [FromBody] ThreadDTO (topicId, title, text, datePosted)
+  //////////////
+
   constructor(private http: HttpClient) { }
 
+  ////////////////////////////////////////////////////////////
+  public getThreadsForTopic(params: HttpParams): Observable<Thread[]>{
+    return this.http.get<Thread[]>(this.getThreadsForTopicUrl, {params: params});
+  }
+
+  public getRepliesForThread(params: HttpParams): Observable<Reply[]>{
+    return this.http.get<Reply[]>(this.getRepliesForThreadUrl, {params: params})
+  }
+
+
+  public postNewThread(threadDTO: ThreadDTO): Observable<any>{
+    return this.http.post<any>(this.newThreadUrl, threadDTO, {headers: new HttpHeaders({
+      Authorization: `Bearer ${localStorage.getItem('accessToken')}`
+    })});
+  }
+  ////////////////////////////////////////////////////////////
   public getBreeds(params: HttpParams): Observable<Breed[]> {
     return this.http.get<Breed[]>(this.getBreedsUrl, { headers: this.headers, params: params });
   }
