@@ -4,11 +4,14 @@ import { RouterOutlet } from '@angular/router';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { LoadingService } from '../services/loading.service';
 import { Subscription } from 'rxjs';
+import { HTTP_INTERCEPTORS } from '@angular/common/http';
+import { JwtInterceptor } from '../services/jwt-interceptor';
 
 @Component({
   selector: 'app-root',
   standalone: true,
   imports: [ RouterOutlet, MatProgressSpinnerModule, CommonModule ],
+  providers:[ { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true } ],
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css']
 })

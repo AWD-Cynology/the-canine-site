@@ -1,6 +1,12 @@
-export class LoginModel {
-  public username: string = '';
-  public password: string = '';
+export interface LoginRequest {
+  username: string;
+  password: string;
+}
+
+export interface LoginResponse {
+  flag: boolean;
+  token: string;
+  message: string;
 }
 
 export class RegisterModel {

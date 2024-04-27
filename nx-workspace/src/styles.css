@@ -47,6 +47,14 @@ body {
 .new-discussion {
   margin-bottom: 20px;
 }
+
+.new-discussion input {
+  width: calc(50% - 20px);
+  padding: 5px;
+  margin-bottom: 5px;
+  border-radius: 10px;
+  border: 1px solid #ccc;
+}
   
 .new-discussion textarea {
   width: calc(100% - 20px);

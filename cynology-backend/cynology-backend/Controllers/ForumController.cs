@@ -2,6 +2,8 @@
 using cynology_backend.Models;
 using cynology_backend.Models.DTO_s;
 using cynology_backend.Models.Identity;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -37,6 +39,7 @@ namespace cynology_backend.Controllers
         
 
         [HttpPost("[action]")]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         public async Task<IActionResult> CommentToReply(string commentId, [FromBody] ReplyDTO replyDTO)
         {
             var threadAccessPoint = await _dataContext.Replies.Where(z => z.Id == Guid.Parse(commentId)).FirstOrDefaultAsync();
@@ -76,6 +79,7 @@ namespace cynology_backend.Controllers
         }
 
         [HttpPost("[action]")]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         public async Task<IActionResult> ReplyToThread(string threadId, [FromBody] ReplyDTO replyDTO)
         {
             var thread = _dataContext.Threads.Where(z => z.Id.Equals(threadId)).FirstOrDefaultAsync();
@@ -110,6 +114,7 @@ namespace cynology_backend.Controllers
         }
 
         [HttpPost("[action]")]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         public async Task<IActionResult> NewThread([FromBody] ThreadDTO threadDTO)
         {
             if (!ModelState.IsValid)
