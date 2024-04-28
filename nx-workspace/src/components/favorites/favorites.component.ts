@@ -3,6 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { Dog, FavoriteDog } from '../../models/dog.model';
 import { ApiService } from '../../services/api.service';
 import { WrapperComponent } from '../wrapper/wrapper.component';
+import { catchError, forkJoin, map, mergeMap, of } from 'rxjs';
 
 @Component({
   selector: 'app-favorites',
@@ -19,26 +20,40 @@ export class FavoritesComponent implements OnInit {
 
   public ngOnInit(): void {
     this.isLoading = true;
-    this.apiService.getFavoriteDogs().subscribe({
-      next: (response: FavoriteDog[]) => {
-        for (let dog of response) {
-          this.apiService.getDog(dog).subscribe({
-            next: (response: Dog) => {
-              dog.name = response.breeds[0].name;
-              this.data.push(dog);
-            },
-            error: (error) => {
-              this.isLoading = false;
+    this.apiService.getFavoriteDogs()
+    .pipe(
+      mergeMap((response: FavoriteDog[]) => {
+        const dogRequests = response.map(dog =>
+          this.apiService.getDog(dog)
+          .pipe(
+            catchError(error => {
               console.log(error);
-            }
+              return of(null);
+            })
+          )
+        );
+        return forkJoin(dogRequests)
+        .pipe(
+          map((dogs: (Dog | null)[]) => {
+            return response.map((dog, index) => {
+                if (dogs[index]) {
+                  dog.name = dogs[index]?.breeds[0]?.name ?? "Unknown";
+                } else {
+                  dog.name = "Unknown";
+                }
+                
+                return dog;
+            });
           })
-        }
-        this.isLoading = false;
-      },
-      error: (error) => {
-        this.isLoading = false;
+        );
+      }),
+      catchError(error => {
         console.log(error);
-      }
+        return of([]);
+      })
+    ).subscribe((data: FavoriteDog[]) => {
+      this.data = data;
+      this.isLoading = false;
     });
   }
 }

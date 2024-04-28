@@ -2,7 +2,7 @@ import { CommonModule } from '@angular/common';
 import { HttpParams } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { Breed, FavoriteDog } from '../../models/dog.model';
-import { forkJoin } from 'rxjs';
+import { forkJoin, switchMap } from 'rxjs';
 import { ApiService } from '../../services/api.service';
 import { WrapperComponent } from '../wrapper/wrapper.component';
 
@@ -61,6 +61,42 @@ export class GalleryComponent implements OnInit {
     });
   }
 
+  private addDogToFavorites(breed: Breed): void {
+    this.apiService.addFavorite(breed.image.id).subscribe({
+      next: () => {
+        breed.isInFavorites = true;
+        this.isLoading = false;
+      },
+      error: (error) => {
+        this.isLoading = false;
+        console.error(error);
+      }
+    });
+  }
+
+  private removeDogFromFavorites(breed: Breed): void {
+    this.apiService.getFavoriteDogs()
+    .pipe(
+      switchMap((favorites: FavoriteDog[]) => {
+        const favoriteDog = favorites.find(x => x.image_id === breed.image.id);
+        if (!favoriteDog) {
+          throw new Error('Favorite dog not found');
+        }
+
+        return this.apiService.removeFavorite(favoriteDog.id);
+      })
+    ).subscribe({
+      next: () => {
+        breed.isInFavorites = false;
+        this.isLoading = false;
+      },
+      error: (error) => {
+        this.isLoading = false;
+        console.error(error);
+      }
+    });
+  }
+
   public ngOnInit(): void {
     this.fetchData();
     this.points = parseInt(localStorage.getItem('points') || '0', 10);
@@ -69,37 +105,9 @@ export class GalleryComponent implements OnInit {
   public changeFavorite(breed: Breed): void {
     this.isLoading = true;
     if (breed.isInFavorites) {
-      this.apiService.getFavoriteDogs().subscribe({
-        next: (favorites: FavoriteDog[]) => {
-          let id = favorites.find(x => x.image_id === breed.image.id)?.id;
-          this.apiService.removeFavorite(id!).subscribe({
-            next: () => {
-              breed.isInFavorites = false;
-              this.isLoading = false;
-            },
-            error: (error) => {
-              this.isLoading = false;
-              console.error(error);
-            }
-          });
-        },
-        error: (error) => {
-          this.isLoading = false;
-          console.error(error);
-        }
-      });
-    }
-    else {
-      this.apiService.addFavorite(breed.image.id).subscribe({
-        next: () => {
-          breed.isInFavorites = true;
-          this.isLoading = false;
-        },
-        error: (error) => {
-          this.isLoading = false;
-          console.error(error);
-        }
-      });
+      this.removeDogFromFavorites(breed);
+    } else {
+      this.addDogToFavorites(breed);
     }
   }
 
@@ -114,7 +122,8 @@ export class GalleryComponent implements OnInit {
       return;
     }
 
-    this.apiService.vote(vote, breed.image.id, username).subscribe({
+    this.apiService.vote(vote, breed.image.id, username)
+    .subscribe({
       next: () => {
         this.points = Math.max(0, availablePoints - 1)
         localStorage.setItem('points', this.points.toString());
