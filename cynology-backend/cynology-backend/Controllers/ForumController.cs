@@ -11,14 +11,9 @@ namespace cynology_backend.Controllers;
 
 [Route("api/forum")]
 [ApiController]
-public class ForumController : ControllerBase
+public class ForumController(DataContext dataContext) : ControllerBase
 {
-    private readonly DataContext _dataContext;
-
-    public ForumController(DataContext dataContext)
-    {
-        _dataContext = dataContext;
-    }
+    private readonly DataContext _dataContext = dataContext;
 
     [HttpGet("threads-for-topic")]
     public List<Models.Thread> GetThreadsForTopic([FromQuery]string topic) {
@@ -58,7 +53,7 @@ public class ForumController : ControllerBase
             Title = threadDTO.Title,
             Text = threadDTO.Text,
             DatePosted = DateTime.Now,
-            Replies = null
+            Replies = new List<Reply>()
         };
 
         _dataContext.Threads.Add(thread);

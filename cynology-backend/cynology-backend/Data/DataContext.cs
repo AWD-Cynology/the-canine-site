@@ -5,12 +5,8 @@ using Microsoft.EntityFrameworkCore;
 
 namespace cynology_backend.Data;
 
-public class DataContext : IdentityDbContext<CynologyUser>
-{ 
-    public DataContext(DbContextOptions<DataContext> options) : base(options) { 
-
-    }
-
+public class DataContext(DbContextOptions<DataContext> options) : IdentityDbContext<CynologyUser>(options)
+{
     public virtual DbSet<Models.Thread> Threads { get; set; }
 
     public virtual DbSet<Reply> Replies { get; set; }
