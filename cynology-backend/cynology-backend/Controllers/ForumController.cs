@@ -1,10 +1,8 @@
 ﻿using cynology_backend.Data;
 using cynology_backend.Models;
 using cynology_backend.Models.DTO_s;
-using cynology_backend.Models.Identity;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
@@ -15,13 +13,11 @@ namespace cynology_backend.Controllers;
 [ApiController]
 public class ForumController : ControllerBase
 {
-    DataContext _dataContext;
-    private readonly UserManager<CynologyUser> _userManager;
+    private readonly DataContext _dataContext;
 
-    public ForumController(DataContext dataContext, UserManager<CynologyUser> userManager)
+    public ForumController(DataContext dataContext)
     {
         _dataContext = dataContext;
-        _userManager = userManager;
     }
 
     [HttpGet("[action]")]

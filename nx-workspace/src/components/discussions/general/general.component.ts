@@ -2,11 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { HttpParams } from '@angular/common/http';
 import { CommonModule, DatePipe} from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { forkJoin } from 'rxjs';
-import { Thread, Reply, ThreadDTO, ReplyDTO } from '../../../models/forum.model'
+import { Thread, ThreadDTO } from '../../../models/forum.model'
 import { ApiService } from '../../../services/api.service';
-import { error } from 'console';
-import { JwtInterceptor } from '../../../services/jwt-interceptor';
 
 @Component({
   selector: 'app-general-forum',
@@ -17,30 +14,29 @@ import { JwtInterceptor } from '../../../services/jwt-interceptor';
   styleUrls: ['./general.component.css', '../../../styles.css']
 })
 export class GeneralForumComponent implements OnInit{
+  public threads: Thread[] = [];
+  public newThreadContent: string = '';
+  public newThreadTitle: string = '';
 
-  threads: Thread[] = [];
-  newThreadContent: string = '';
-  newThreadTitle: string = '';
-  discussionTextAreas: string[] = [];
+  public constructor(private apiService: ApiService, private datePipe: DatePipe) { }
 
-  constructor(private apiService: ApiService, private datePipe: DatePipe){}
-
-  fetchData(){
-    forkJoin({
-      threads: this.apiService.getThreadsForTopic(new HttpParams().set('topicId', "general"))
-    }).subscribe({
-      next: ({ threads }) =>{this.threads = threads},
+  private fetchData() {
+    this.apiService.getThreadsForTopic(new HttpParams().set('topicId', "general"))
+    .subscribe({
+      next: (threads) => {
+        this.threads = threads
+      },
       error: (error) => {
         console.error(error);
       }
-    })
+    });
   }
 
-  ngOnInit(): void {
+  public ngOnInit(): void {
     this.fetchData();
   }
 
-  startDiscussion(): void {
+  public startDiscussion(): void {
     if (this.newThreadContent.trim() !== '') {
       const newThread: ThreadDTO = {
         topicId: "general",
@@ -49,8 +45,11 @@ export class GeneralForumComponent implements OnInit{
         datePosted: this.datePipe.transform(new Date(), 'yyyy-MM-ddTHH:mm:ss') as string,
       };
 
-      this.apiService.postNewThread(newThread).subscribe({
-        next: ({}) => {this.fetchData()},
+      this.apiService.postNewThread(newThread)
+      .subscribe({
+        next: () => {
+          this.fetchData()
+        },
         error: (error) => {
           console.error(error);
         }
@@ -62,7 +61,7 @@ export class GeneralForumComponent implements OnInit{
   }
 
 
-  replyToDiscussion(discussion: Thread, textArea: string, areaIndex: number): void {
+  public replyToDiscussion(discussion: Thread, textArea: string, areaIndex: number): void {
     // if(textArea.trim() !== ''){
     //   const newReply: Reply = {
     //     username: 'User456', 
@@ -76,7 +75,7 @@ export class GeneralForumComponent implements OnInit{
   }
 
   // Function to reply to a discussion
-  replyToReply(replyId: string): void {
+  public replyToReply(replyId: string): void {
     // const newReply: Reply = {
     //   username: 'User456', // Replace with the actual username of the user
     //   timestamp: new Date(),
@@ -90,16 +89,16 @@ export class GeneralForumComponent implements OnInit{
   }
 }
 
-// interface Discussion {
-//   username: string;
-//   timestamp: Date;
-//   content: string;
-//   replies: Reply[];
-// }
+interface Discussion {
+  username: string;
+  timestamp: Date;
+  content: string;
+  replies: Reply[];
+}
 
-// interface Reply {
-//   username: string;
-//   timestamp: Date;
-//   content: string;
-//   replies: Reply[];
-// }
+interface Reply {
+  username: string;
+  timestamp: Date;
+  content: string;
+  replies: Reply[];
+}
