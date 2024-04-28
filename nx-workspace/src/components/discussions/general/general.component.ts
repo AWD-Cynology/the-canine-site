@@ -1,9 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { HttpParams } from '@angular/common/http';
 import { CommonModule, DatePipe} from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Thread, ThreadDTO } from '../../../models/forum.model'
-import { ApiService } from '../../../services/api.service';
+import { ForumService } from '../../../services/forum.service';
 
 @Component({
   selector: 'app-general-forum',
@@ -17,16 +16,20 @@ export class GeneralForumComponent implements OnInit{
   public threads: Thread[] = [];
   public newThreadContent: string = '';
   public newThreadTitle: string = '';
+  public isLoading = false;
 
-  public constructor(private apiService: ApiService, private datePipe: DatePipe) { }
+  public constructor(private forumApiService: ForumService, private datePipe: DatePipe) { }
 
   private fetchData() {
-    this.apiService.getThreadsForTopic(new HttpParams().set('topicId', "general"))
+    this.isLoading = true;
+    this.forumApiService.getThreadsForTopic('general')
     .subscribe({
       next: (threads) => {
         this.threads = threads
+        this.isLoading = false;
       },
       error: (error) => {
+        this.isLoading = false;
         console.error(error);
       }
     });
@@ -37,6 +40,7 @@ export class GeneralForumComponent implements OnInit{
   }
 
   public startDiscussion(): void {
+    this.isLoading = true;
     if (this.newThreadContent.trim() !== '') {
       const newThread: ThreadDTO = {
         topicId: "general",
@@ -45,12 +49,13 @@ export class GeneralForumComponent implements OnInit{
         datePosted: this.datePipe.transform(new Date(), 'yyyy-MM-ddTHH:mm:ss') as string,
       };
 
-      this.apiService.postNewThread(newThread)
+      this.forumApiService.postNewThread(newThread)
       .subscribe({
         next: () => {
-          this.fetchData()
+          this.fetchData();
         },
         error: (error) => {
+          this.isLoading = false;
           console.error(error);
         }
       });

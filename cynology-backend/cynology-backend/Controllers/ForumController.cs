@@ -9,7 +9,7 @@ using System.Security.Claims;
 
 namespace cynology_backend.Controllers;
 
-[Route("api/[controller]")]
+[Route("api/forum")]
 [ApiController]
 public class ForumController : ControllerBase
 {
@@ -20,21 +20,21 @@ public class ForumController : ControllerBase
         _dataContext = dataContext;
     }
 
-    [HttpGet("[action]")]
+    [HttpGet("threads-for-topic")]
     public List<Models.Thread> GetThreadsForTopic(string topicId) {
         return _dataContext.Threads.Where(z => z.TopicId.Equals(topicId))
             .Include(x => x.Replies)
             .ToList();
     }
 
-    [HttpGet("[action]")]
-    public List<Reply> GetRepliesForThreadId(string threadId)
+    [HttpGet("replies-for-thread")]
+    public List<Reply> GetRepliesForThread(string threadId)
     {
         return _dataContext.Replies.Where(z => z.ThreadId.Equals(threadId)).ToList();
     }
     
 
-    [HttpPost("[action]")]
+    [HttpPost("comment-to-reply")]
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public async Task<IActionResult> CommentToReply(string commentId, [FromBody] ReplyDTO replyDTO)
     {
@@ -74,7 +74,7 @@ public class ForumController : ControllerBase
         return Ok(reply);
     }
 
-    [HttpPost("[action]")]
+    [HttpPost("reply-to-thread")]
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public async Task<IActionResult> ReplyToThread(string threadId, [FromBody] ReplyDTO replyDTO)
     {
@@ -109,7 +109,7 @@ public class ForumController : ControllerBase
         return Ok(reply);
     }
 
-    [HttpPost("[action]")]
+    [HttpPost("new-thread")]
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public async Task<IActionResult> NewThread([FromBody] ThreadDTO threadDTO)
     {
