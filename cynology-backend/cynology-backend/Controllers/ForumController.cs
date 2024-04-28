@@ -21,25 +21,29 @@ public class ForumController : ControllerBase
     }
 
     [HttpGet("threads-for-topic")]
-    public List<Models.Thread> GetThreadsForTopic(string topicId) {
-        return _dataContext.Threads.Where(z => z.TopicId.Equals(topicId))
+    public List<Models.Thread> GetThreadsForTopic([FromQuery]string topic) {
+        return _dataContext.Threads.Where(z => z.Topic.Equals(topic))
             .Include(x => x.Replies)
             .ToList();
     }
 
     [HttpGet("replies-for-thread")]
-    public List<Reply> GetRepliesForThread(string threadId)
+    public List<Reply> GetRepliesForThread([FromQuery]string threadId)
     {
-        return _dataContext.Replies.Where(z => z.ThreadId.Equals(threadId)).ToList();
+        return _dataContext.Replies
+            .Where(z => z.ThreadId.Equals(threadId))
+            .ToList();
     }
-    
 
     [HttpPost("comment-to-reply")]
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public async Task<IActionResult> CommentToReply(string commentId, [FromBody] ReplyDTO replyDTO)
     {
-        var threadAccessPoint = await _dataContext.Replies.Where(z => z.Id == Guid.Parse(commentId)).FirstOrDefaultAsync();
-        var loggedUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        Reply? threadAccessPoint = await _dataContext.Replies
+            .Where(z => z.Id == Guid.Parse(commentId))
+            .FirstOrDefaultAsync();
+
+        string? loggedUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
         if (string.IsNullOrEmpty(loggedUserId))
         {
@@ -51,7 +55,7 @@ public class ForumController : ControllerBase
             return BadRequest("Comment for replying not found.");
         }
 
-        var reply = new Reply
+        Reply reply = new Reply
         {
             Id = Guid.NewGuid(),
             ThreadId = threadAccessPoint.ThreadId,
@@ -78,15 +82,18 @@ public class ForumController : ControllerBase
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public async Task<IActionResult> ReplyToThread(string threadId, [FromBody] ReplyDTO replyDTO)
     {
-        var thread = _dataContext.Threads.Where(z => z.Id.Equals(threadId)).FirstOrDefaultAsync();
-        var loggedUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        var thread = _dataContext.Threads
+            .Where(z => z.Id.Equals(threadId))
+            .FirstOrDefaultAsync();
+
+        string? loggedUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
         if (string.IsNullOrEmpty(loggedUserId))
         {
             return BadRequest("User ID not found.");
         }
 
-        var reply = new Reply
+        Reply reply = new Reply
         {
             Id = Guid.NewGuid(),
             ThreadId = Guid.Parse(threadId),
@@ -118,20 +125,20 @@ public class ForumController : ControllerBase
             return BadRequest(ModelState);
         }
 
-        var loggedUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        string? loggedUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
         if (string.IsNullOrEmpty(loggedUserId))
         {
             return BadRequest("User ID not found.");
         }
 
-        var thread = new Models.Thread
+        Models.Thread thread = new Models.Thread
         {
             Id = Guid.NewGuid(),
-            TopicId = threadDTO.TopicId,
+            Topic = threadDTO.Topic,
             CynologyUserId = loggedUserId,
             Title = threadDTO.Title,
             Text = threadDTO.Text,
-            DatePosted = threadDTO.DatePosted,
+            DatePosted = DateTime.Now,
             Replies = null
         };
 

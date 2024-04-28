@@ -11,8 +11,6 @@ public class DataContext : IdentityDbContext<CynologyUser>
 
     }
 
-    public virtual DbSet<Topic> Topic { get; set; }
-
     public virtual DbSet<Models.Thread> Threads { get; set; }
 
     public virtual DbSet<Reply> Replies { get; set; }

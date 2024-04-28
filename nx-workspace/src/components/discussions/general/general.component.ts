@@ -1,24 +1,24 @@
 import { Component, OnInit } from '@angular/core';
-import { CommonModule, DatePipe} from '@angular/common';
+import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Thread, ThreadDTO } from '../../../models/forum.model'
 import { ForumService } from '../../../services/forum.service';
+import { WrapperComponent } from '../../wrapper/wrapper.component';
 
 @Component({
   selector: 'app-general-forum',
   standalone: true,
-  imports: [ CommonModule, FormsModule ],
-  providers: [ DatePipe ],
+  imports: [ CommonModule, FormsModule, WrapperComponent ],
   templateUrl: './general.component.html',
   styleUrls: ['./general.component.css', '../../../styles.css']
 })
-export class GeneralForumComponent implements OnInit{
+export class GeneralForumComponent implements OnInit {
   public threads: Thread[] = [];
   public newThreadContent: string = '';
   public newThreadTitle: string = '';
   public isLoading = false;
 
-  public constructor(private forumApiService: ForumService, private datePipe: DatePipe) { }
+  public constructor(private forumApiService: ForumService) { }
 
   private fetchData() {
     this.isLoading = true;
@@ -39,17 +39,16 @@ export class GeneralForumComponent implements OnInit{
     this.fetchData();
   }
 
-  public startDiscussion(): void {
+  public newThread(): void {
     this.isLoading = true;
     if (this.newThreadContent.trim() !== '') {
       const newThread: ThreadDTO = {
-        topicId: "general",
+        topic: "general",
         title: this.newThreadTitle,
-        text: this.newThreadContent,
-        datePosted: this.datePipe.transform(new Date(), 'yyyy-MM-ddTHH:mm:ss') as string,
+        text: this.newThreadContent
       };
 
-      this.forumApiService.postNewThread(newThread)
+      this.forumApiService.newThread(newThread)
       .subscribe({
         next: () => {
           this.fetchData();

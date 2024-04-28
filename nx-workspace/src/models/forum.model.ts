@@ -23,8 +23,7 @@ export interface ReplyDTO {
 }
 
 export interface ThreadDTO {
-    topicId: string;
+    topic: string;
     title: string;
     text: string;
-    datePosted: string;
 }

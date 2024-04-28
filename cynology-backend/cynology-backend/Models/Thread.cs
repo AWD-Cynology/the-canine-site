@@ -1,12 +1,10 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 
 namespace cynology_backend.Models;
 
 public class Thread : BaseEntity
 {
-    [ForeignKey("Topic")]
-    public string TopicId { get; set; }
+    public string Topic { get; set; }
 
     [Required]
     public string CynologyUserId { get; set; }

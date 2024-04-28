@@ -11,15 +11,15 @@ export class ForumService {
 
   public constructor(private http: HttpClient) { }
 
-  public getThreadsForTopic(topicId: string): Observable<Thread[]>{
-    return this.http.get<Thread[]>(`${this.forumApiUrl}/threads-for-topic`, { params: { 'topicId': topicId } });
+  public getThreadsForTopic(topic: string): Observable<Thread[]> {
+    return this.http.get<Thread[]>(`${this.forumApiUrl}/threads-for-topic?topic=${topic}`);
   }
 
-  public getRepliesForThread(params: HttpParams): Observable<Reply[]>{
-    return this.http.get<Reply[]>(`${this.forumApiUrl}/replies-for-thread`, { params: params })
+  public getRepliesForThread(threadId: string): Observable<Reply[]> {
+    return this.http.get<Reply[]>(`${this.forumApiUrl}/replies-for-thread?threadId=${threadId}`);
   }
 
-  public postNewThread(threadDTO: ThreadDTO): Observable<any>{
+  public newThread(threadDTO: ThreadDTO): Observable<any> {
     return this.http.post<any>(`${this.forumApiUrl}/new-thread`, threadDTO, { headers: new HttpHeaders({
       Authorization: `Bearer ${localStorage.getItem('accessToken')}`
     })});
