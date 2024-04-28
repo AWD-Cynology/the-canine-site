@@ -53,20 +53,6 @@
     z-index: 1;
 }
 
-/* .dog-name {
-    padding: 20px;
-    margin-top: -35px;
-    text-align: center;
-    background-image: url(../../assets/images/dogBoneSkin.png);
-    background-position: center;
-    background-repeat: no-repeat;
-    background-size: 80% 190%;
-    text-wrap: wrap;
-    color: black;
-    position: relative;
-    z-index: 2;
-} */
-
 .dog-name {
     padding: 20px;
     padding-top: 150px;

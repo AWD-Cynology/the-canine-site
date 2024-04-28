@@ -69,17 +69,6 @@ nav a:hover {
 .header-content a:hover {
     background-color: #5d4037;
 }
-/* 
-header div {
-    display: flex;
-    justify-content: space-between;
-    font-size: 18px;
-    margin-top: 10px;
-    background-color: #795548;
-    padding: 10px;
-    border-radius: 10px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
-} */
 
 .title {
     margin-top: 0;
