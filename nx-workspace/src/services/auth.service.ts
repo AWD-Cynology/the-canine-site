@@ -14,10 +14,10 @@ export class AuthService {
 
   public login(request: LoginRequest): Observable<LoginResponse> {
     return this.http.post<LoginResponse>(this.loginUrl, request)
-      .pipe(map(response =>{
-          localStorage.setItem('accessToken', response.token);
-          return response;
-      }));
+    .pipe(map(response => {
+      localStorage.setItem('accessToken', response.token);
+      return response;
+    }));
   }
 
   public isLoggedIn(){
