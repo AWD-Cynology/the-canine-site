@@ -19,8 +19,8 @@ export class ForumService {
     return this.http.get<Reply[]>(`${this.forumApiUrl}/replies-for-thread?threadId=${threadId}`);
   }
 
-  public newThread(threadDTO: ThreadDTO): Observable<any> {
-    const accessToken = localStorage.getItem('accessToken');
-    return this.http.post<any>(`${this.forumApiUrl}/new-thread`, threadDTO, { headers: new HttpHeaders({Authorization: `Bearer ${accessToken}`}) });
+  public newThread(threadDTO: ThreadDTO): Observable<Thread> {
+    const accessToken = `Bearer ${localStorage.getItem('accessToken')}`;
+    return this.http.post<Thread>(`${this.forumApiUrl}/new-thread`, threadDTO, { headers: new HttpHeaders({ Authorization: accessToken }) });
   }
 }

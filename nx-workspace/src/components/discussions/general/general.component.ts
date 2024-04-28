@@ -20,7 +20,7 @@ export class GeneralForumComponent implements OnInit {
 
   public constructor(private forumApiService: ForumService) { }
 
-  private fetchData() {
+  public ngOnInit(): void {
     this.isLoading = true;
     this.forumApiService.getThreadsForTopic('general')
     .subscribe({
@@ -35,10 +35,6 @@ export class GeneralForumComponent implements OnInit {
     });
   }
 
-  public ngOnInit(): void {
-    this.fetchData();
-  }
-
   public newThread(): void {
     this.isLoading = true;
     if (this.newThreadContent.trim() !== '') {
@@ -50,8 +46,9 @@ export class GeneralForumComponent implements OnInit {
 
       this.forumApiService.newThread(newThread)
       .subscribe({
-        next: () => {
-          this.fetchData();
+        next: (thread) => {
+          this.threads.push(thread);
+          this.isLoading = false;
         },
         error: (error) => {
           this.isLoading = false;
