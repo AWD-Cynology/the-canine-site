@@ -69,6 +69,7 @@ export class QuizComponent implements OnInit {
   }
 
   public takeAGuess(dogName: string): void {
+    this.isLoading = true;
     if (dogName === this.breedToGuess.name) {
       this.message = 'You guessed right.';
       this.guessedRight = true;
@@ -87,6 +88,8 @@ export class QuizComponent implements OnInit {
       if( this.guesses > -1 && --this.guesses == 0) {
         this.guesses =- 1;
       }
+      
+      this.isLoading = false;
     }
   }
 }

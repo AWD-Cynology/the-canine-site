@@ -114,7 +114,6 @@ export class GalleryComponent implements OnInit {
   public vote(vote: number, breed: Breed): void {
     this.isLoading = true;
     const availablePoints  = parseInt(localStorage.getItem('points') || '0', 10);
-    const username = sessionStorage.getItem('Username') || '';
 
     if (availablePoints <= 0) {
       console.log("You don't have enough points to vote.");
@@ -122,6 +121,7 @@ export class GalleryComponent implements OnInit {
       return;
     }
 
+    const username = localStorage.getItem('Username') || '';
     this.apiService.vote(vote, breed.image.id, username)
     .subscribe({
       next: () => {

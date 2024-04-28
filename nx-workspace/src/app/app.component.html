@@ -1,17 +1,20 @@
-<header>
-    <h1 class="title">Cynology Website</h1>
-    <p>Your ultimate guide to everything about dogs!</p>
-    <div class="header-content">
-        <span *ngIf="name && surname">Welcome, dog lover: {{ name + ' ' + surname }}</span>
-        <a *ngIf="!username" type="button" href="/login">Login</a>
-        <a *ngIf="username" type="button" (click)="onLogout()">Logout</a>
-    </div>
-</header>
-<nav>
-    <a href="">Home</a>
-    <a href="quiz">Quiz</a>
-    <a href="gallery">Gallery</a>
-    <a href="favorites">Favorites</a>
-    <a href="forum">Forum</a>
-</nav>
+<app-wrapper [isLoading]="isLoading">
+    <header>
+        <h1 class="title">Cynology Website</h1>
+        <p>Your ultimate guide to everything about dogs!</p>
+        <div class="header-content">
+            <span *ngIf="name && surname">Welcome, dog lover: {{ name + ' ' + surname }}</span>
+            <a *ngIf="!username" type="button" href="/login">Login</a>
+            <a *ngIf="username" type="button" (click)="onLogout()">Logout</a>
+        </div>
+    </header>
+    <nav>
+        <a href="">Home</a>
+        <a href="quiz">Quiz</a>
+        <a href="gallery">Gallery</a>
+        <a href="favorites">Favorites</a>
+        <a href="forum">Forum</a>
+    </nav>
+</app-wrapper>
+
 <router-outlet></router-outlet>

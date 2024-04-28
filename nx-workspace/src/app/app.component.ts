@@ -1,14 +1,15 @@
-import { CommonModule, isPlatformBrowser } from '@angular/common';
-import { Component, Inject, OnInit, PLATFORM_ID } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { Component, OnInit } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { JwtInterceptor } from '../services/jwt-interceptor';
+import { WrapperComponent } from '../components/wrapper/wrapper.component';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [ RouterOutlet, MatProgressSpinnerModule, CommonModule ],
+  imports: [ RouterOutlet, MatProgressSpinnerModule, CommonModule, WrapperComponent ],
   providers:[ { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true } ],
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css']
@@ -18,21 +19,26 @@ export class AppComponent implements OnInit {
   public name: string = '';
   public surname: string = '';
   public title: string = 'The Canine Site';
+  public isLoading = false;
 
-  public constructor(@Inject(PLATFORM_ID) private platformId: Object) { }
+  public constructor() { }
 
   public ngOnInit(): void {
-    if (isPlatformBrowser(this.platformId)) {
-      this.username = (sessionStorage.getItem('Username') || "");
-      this.name = (sessionStorage.getItem("Name") || "");
-      this.surname = (sessionStorage.getItem("Surname") || "");
+    this.isLoading = true;
+    
+    if (typeof localStorage !== 'undefined') {
+      this.username = localStorage.getItem('Username') || '';
+      this.name = localStorage.getItem("Name") || '';
+      this.surname = localStorage.getItem("Surname") || '';
     }
+
+    this.isLoading = false;
   }
 
   public onLogout(){
-    sessionStorage.clear();
+    this.isLoading = true;
     localStorage.clear();
-
+    
     window.location.href = '/';
   }
 }

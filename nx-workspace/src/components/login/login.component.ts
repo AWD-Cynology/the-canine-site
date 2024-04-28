@@ -29,9 +29,9 @@ export class LoginComponent {
     this.isLoading = true;
     this.authService.login(this.loginObject).subscribe({
       next: (result: any) => {
-        sessionStorage.setItem('Username', result.userSession.username);
-        sessionStorage.setItem('Name', result.userSession.name);
-        sessionStorage.setItem('Surname', result.userSession.surname);
+        localStorage.setItem('Username', result.userSession.username);
+        localStorage.setItem('Name', result.userSession.name);
+        localStorage.setItem('Surname', result.userSession.surname);
 
         window.location.href = '/';
       },
