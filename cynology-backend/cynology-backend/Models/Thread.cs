@@ -18,5 +18,5 @@ public class Thread : BaseEntity
     [Required]
     public DateTime DatePosted { get; set; }
 
-    public virtual ICollection<Reply> Replies { get; set; }
+    public virtual ICollection<Reply>? Replies { get; set; }
 }
