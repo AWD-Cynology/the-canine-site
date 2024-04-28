@@ -1,22 +1,24 @@
-<div class="ticker-container">
-  <div class="ticker-content" #tickerContent></div>
-</div>
-
-<div class="container">
-  <section class="welcome-section">
-      <h1 class="welcome-title">Explore the world of dogs, learn about different breeds, and have fun!</h1>
-      <p class="text">
-        Welcome to our website dedicated to everything about dogs.
-        Whether you're a dog lover, owner, or just curious, we've got something for you. Get started now!
-      </p>
-      <p class="text">
-        You can play a quiz game and get points to vote on different breeds. You have 3 chances to guess to breed.
-        If you guess it right, you get three voting points and if you don't you lose one.
-      </p>
-      <p class="text">
-        The gallery tab has almost all of the breeds of dogs.
-        You can also choose your favorite dogs and browse through their pictures in a separate tab.
-      </p>
-      <button class="welcome-button" (click)="redirectToGallery()">Get started!</button>
-  </section>
-</div>
+<app-wrapper [isLoading]="isLoading">
+  <div class="ticker-container">
+    <div class="ticker-content" #tickerContent></div>
+  </div>
+  
+  <div class="container">
+    <section class="welcome-section">
+        <h1 class="welcome-title">Explore the world of dogs, learn about different breeds, and have fun!</h1>
+        <p class="text">
+          Welcome to our website dedicated to everything about dogs.
+          Whether you're a dog lover, owner, or just curious, we've got something for you. Get started now!
+        </p>
+        <p class="text">
+          You can play a quiz game and get points to vote on different breeds. You have 3 chances to guess to breed.
+          If you guess it right, you get three voting points and if you don't you lose one.
+        </p>
+        <p class="text">
+          The gallery tab has almost all of the breeds of dogs.
+          You can also choose your favorite dogs and browse through their pictures in a separate tab.
+        </p>
+        <button class="welcome-button" (click)="redirectToGallery()">Get started!</button>
+    </section>
+  </div>
+</app-wrapper>

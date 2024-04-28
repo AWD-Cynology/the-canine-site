@@ -1,26 +1,28 @@
-<div class="gallery-container">
-  <p class="points">Voting points: {{ points }}</p>
-  <section class="gallery">
-    <div class="container gallery-item" *ngFor="let breed of data">
-      <img src="{{ breed.image.url }}">
-      <div>
-        <div class="dog-name">
-          <span>{{ breed.name }}</span>
-          <button class="favorites" [ngClass]="{ 'in-favorites': breed.isInFavorites }" (click)="changeFavorite(breed)"> &#10084; </button>
-        </div>
-        <div class="votes">
-          <button class="upvote" (click)="vote(1, breed)"> &uarr; </button>
-          <span> Upvotes: {{ breed.upvotes }} | Downvotes: {{ breed.downvotes }} </span>
-          <button class="downvote" (click)="vote(0, breed)"> &darr; </button>
+<app-wrapper [isLoading]="isLoading">
+  <div class="gallery-container">
+    <p class="points">Voting points: {{ points }}</p>
+    <section class="gallery">
+      <div class="container gallery-item" *ngFor="let breed of data">
+        <img src="{{ breed.image.url }}">
+        <div>
+          <div class="dog-name">
+            <span>{{ breed.name }}</span>
+            <button class="favorites" [ngClass]="{ 'in-favorites': breed.isInFavorites }" (click)="changeFavorite(breed)"> &#10084; </button>
+          </div>
+          <div class="votes">
+            <button class="upvote" (click)="vote(1, breed)"> &uarr; </button>
+            <span> Upvotes: {{ breed.upvotes }} | Downvotes: {{ breed.downvotes }} </span>
+            <button class="downvote" (click)="vote(0, breed)"> &darr; </button>
+          </div>
         </div>
       </div>
+    </section>
+    <div class="container pagination">
+      <button (click)="goToFirstPage()" [disabled]="currentPage === 0"> &lArr; </button>
+      <button (click)="goToPreviousPage()" [disabled]="currentPage === 0"> &larr; </button>
+      <span> Page {{ currentPage + 1 }} of {{ totalPages }} </span>
+      <button (click)="goToNextPage()" [disabled]="currentPage === totalPages - 1"> &rarr; </button>
+      <button (click)="goToLastPage()" [disabled]="currentPage === totalPages - 1"> &rArr; </button>
     </div>
-  </section>
-  <div class="container pagination">
-    <button (click)="goToFirstPage()" [disabled]="currentPage === 0"> &lArr; </button>
-    <button (click)="goToPreviousPage()" [disabled]="currentPage === 0"> &larr; </button>
-    <span> Page {{ currentPage + 1 }} of {{ totalPages }} </span>
-    <button (click)="goToNextPage()" [disabled]="currentPage === totalPages - 1"> &rarr; </button>
-    <button (click)="goToLastPage()" [disabled]="currentPage === totalPages - 1"> &rArr; </button>
   </div>
-</div>
+</app-wrapper>

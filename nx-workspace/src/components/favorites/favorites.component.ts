@@ -2,42 +2,41 @@ import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { Dog, FavoriteDog } from '../../models/dog.model';
 import { ApiService } from '../../services/api.service';
-import { LoadingService } from '../../services/loading.service';
+import { WrapperComponent } from '../wrapper/wrapper.component';
 
 @Component({
   selector: 'app-favorites',
   standalone: true,
-  imports: [ CommonModule ],
+  imports: [ CommonModule, WrapperComponent ],
   templateUrl: './favorites.component.html',
   styleUrls: ['./favorites.component.css', '../../styles.css']
 })
 export class FavoritesComponent implements OnInit {
   public data: FavoriteDog[] = [];
+  public isLoading = false;
 
-  public constructor(private apiService: ApiService,
-    private loadingService: LoadingService) { }
+  public constructor(private apiService: ApiService) { }
 
   public ngOnInit(): void {
-    this.loadingService.setLoadingState(true);
+    this.isLoading = true;
     this.apiService.getFavoriteDogs().subscribe({
       next: (response: FavoriteDog[]) => {
-        this.loadingService.setLoadingState(true);
         for (let dog of response) {
           this.apiService.getDog(dog).subscribe({
             next: (response: Dog) => {
               dog.name = response.breeds[0].name;
               this.data.push(dog);
-              this.loadingService.setLoadingState(false);
             },
             error: (error) => {
-              this.loadingService.setLoadingState(false);
+              this.isLoading = false;
               console.log(error);
             }
           })
         }
+        this.isLoading = false;
       },
       error: (error) => {
-        this.loadingService.setLoadingState(false);
+        this.isLoading = false;
         console.log(error);
       }
     });

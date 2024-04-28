@@ -4,12 +4,12 @@ import { Component, OnInit } from '@angular/core';
 import { Breed } from '../../models/dog.model';
 import { ApiService } from '../../services/api.service';
 import { shuffle } from 'lodash';
-import { LoadingService } from '../../services/loading.service';
+import { WrapperComponent } from '../wrapper/wrapper.component';
 
 @Component({
   selector: 'app-quiz',
   standalone: true,
-  imports: [ CommonModule ],
+  imports: [ CommonModule, WrapperComponent ],
   templateUrl: './quiz.component.html',
   styleUrls: ['./quiz.component.css', '../../styles.css']
 })
@@ -22,9 +22,9 @@ export class QuizComponent implements OnInit {
   public currentPage: number = 0;
   public points: number = 0;
   public guesses: number = 3;
+  public isLoading = false;
 
-  public constructor(private apiService: ApiService,
-    private loadingService: LoadingService) { }
+  public constructor(private apiService: ApiService) { }
 
   private resetGuess(): void {
     this.message = '';
@@ -40,26 +40,24 @@ export class QuizComponent implements OnInit {
   }
 
   private fetchData(): void {
-    this.loadingService.setLoadingState(true);
     let params = new HttpParams()
     .set('limit', this.pageSize.toString())
     .set('page', this.currentPage.toString());
 
     this.apiService.getBreeds(params).subscribe({
       next: (response: Breed[]) => {
-        this.loadingService.setLoadingState(true);
         this.setRandomDog(response);
-        this.loadingService.setLoadingState(false);
+        this.isLoading = false;
       },
       error: (error) => {
-        this.loadingService.setLoadingState(false);
+        this.isLoading = false;
         console.error(error);
       }
     });
   }
   
   public ngOnInit(): void {
-    this.loadingService.setLoadingState(true);
+    this.isLoading = true;
     const pointsString = localStorage.getItem('points');
     if (pointsString === null || pointsString === undefined) {
       localStorage.setItem('points', '0');
@@ -71,7 +69,7 @@ export class QuizComponent implements OnInit {
   }
 
   public takeAGuess(dogName: string): void {
-    if (dogName === this.breedToGuess.name){
+    if (dogName === this.breedToGuess.name) {
       this.message = 'You guessed right.';
       this.guessedRight = true;
 
@@ -81,9 +79,9 @@ export class QuizComponent implements OnInit {
         this.points = (this.points <= 0) ? Math.max(0, this.guesses) : this.points + this.guesses;
         localStorage.setItem('points', this.points.toString());
       }
+
       this.fetchData();
-    }
-    else {
+    } else {
       this.message = 'You guessed wrong, guess again.';
       this.guessedRight = false;
       if( this.guesses > -1 && --this.guesses == 0) {

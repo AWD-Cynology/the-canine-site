@@ -1,13 +1,15 @@
-<div class="container">
-    <section class="favorites">
-        <h2>Favorites</h2>
-        <div class="favorites-list">
-            <div class="favorites-item" *ngFor="let dog of data">
-                <div class="dog-image">
-                    <img src="{{ dog['image']['url'] }}">
+<app-wrapper [isLoading]="isLoading">
+    <div class="container">
+        <section class="favorites">
+            <h2>Favorites</h2>
+            <div class="favorites-list">
+                <div class="favorites-item" *ngFor="let dog of data">
+                    <div class="dog-image">
+                        <img src="{{ dog['image']['url'] }}">
+                    </div>
+                    <div class="dog-name">{{ dog.name }}</div>
                 </div>
-                <div class="dog-name">{{ dog.name }}</div>
             </div>
-        </div>
-    </section>
-</div>
+        </section>
+    </div>
+</app-wrapper>
