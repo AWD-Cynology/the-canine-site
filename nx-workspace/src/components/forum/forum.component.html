@@ -1,10 +1,10 @@
-<div class="forum-container">
+<div class="forum-container" *ngIf="!chosenTopic">
   <section class="forum-categories">
     <h2>Forum Topics</h2>
     <div class="category-card" *ngFor="let category of forumCategories"
       (mouseenter)="category.isHovered = true"
       (mouseleave)="category.isHovered = false"
-      (click)="goToDiscussionPage(category)">
+      (click)="chooseTopic(category)">
       <div class="category-icon">{{ category.icon }}</div>
   
       <div class="category-name">{{ category.name }}</div>
@@ -13,4 +13,8 @@
     </div>
   </section>
 </div>
+<app-discussion *ngIf="chosenTopic"
+  [topicId]="chosenTopic.callerId"
+  (goBackToForumTopics)="resetChosenTopic()">
+</app-discussion>
   

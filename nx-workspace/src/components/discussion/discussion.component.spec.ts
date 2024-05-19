@@ -1,18 +1,17 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { DiscussionComponent } from './discussion.component';
 
-import { PairComponent } from './pair.component';
-
-describe('PairComponent', () => {
-  let component: PairComponent;
-  let fixture: ComponentFixture<PairComponent>;
+describe('GeneralComponent', () => {
+  let component: DiscussionComponent;
+  let fixture: ComponentFixture<DiscussionComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [PairComponent]
+      imports: [DiscussionComponent]
     })
     .compileComponents();
     
-    fixture = TestBed.createComponent(PairComponent);
+    fixture = TestBed.createComponent(DiscussionComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

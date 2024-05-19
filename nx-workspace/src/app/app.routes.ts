@@ -5,7 +5,6 @@ import { FavoritesComponent } from '../components/favorites/favorites.component'
 import { HomeComponent } from '../components/home/home.component';
 import { AuthGuard } from '../services/auth.guard';
 import { ForumComponent } from '../components/forum/forum.component';
-import { GeneralForumComponent } from '../components/discussions/general/general.component';
 import { LoginComponent } from '../components/login/login.component';
 import { RegisterComponent } from '../components/register/register.component';
 
@@ -16,7 +15,6 @@ export const routes: Routes = [
     { path: 'quiz', component: QuizComponent, canActivate: [AuthGuard] },
     { path: 'favorites', component: FavoritesComponent, canActivate: [AuthGuard] },
     { path: 'forum', component: ForumComponent, canActivate: [AuthGuard] },
-    { path: 'discussion/general', component: GeneralForumComponent, canActivate: [AuthGuard] },
     { path: 'login', component: LoginComponent },
     { path: 'register', component: RegisterComponent },
 ];

@@ -1,39 +1,44 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { ReplyDTO, Thread, ThreadDTO } from '../../../models/forum.model'
-import { ForumService } from '../../../services/forum.service';
-import { WrapperComponent } from '../../wrapper/wrapper.component';
-import { error } from 'node:console';
+import { ReplyDTO, Thread, ThreadDTO } from '../../models/forum.model'
+import { ForumService } from '../../services/forum.service';
+import { WrapperComponent } from '../wrapper/wrapper.component';
+import { EventEmitter } from 'stream';
+import { Subject } from 'rxjs';
 
 @Component({
-  selector: 'app-general-forum',
+  selector: 'app-discussion',
   standalone: true,
   imports: [ CommonModule, FormsModule, WrapperComponent ],
-  templateUrl: './general.component.html',
-  styleUrls: ['./general.component.css', '../../../styles.css']
+  templateUrl: './discussion.component.html',
+  styleUrls: ['./discussion.component.css', '../../styles.css']
 })
-export class GeneralForumComponent implements OnInit {
+export class DiscussionComponent implements OnInit {
   public threads: Thread[] = [];
   public newThreadContent: string = '';
   public newThreadTitle: string = '';
   public isLoading = false;
+  @Input() public topicId: string | null = null;
+  @Output() public goBackToForumTopics = new Subject<void>;
 
   public constructor(private forumApiService: ForumService) { }
 
   public ngOnInit(): void {
     this.isLoading = true;
-    this.forumApiService.getThreadsForTopic('general')
-    .subscribe({
-      next: (threads) => {
-        this.threads = threads
-        this.isLoading = false;
-      },
-      error: (error) => {
-        this.isLoading = false;
-        console.error(error);
-      }
-    });
+    if (this.topicId) {
+      this.forumApiService.getThreadsForTopic(this.topicId)
+      .subscribe({
+        next: (threads) => {
+          this.threads = threads
+          this.isLoading = false;
+        },
+        error: (error) => {
+          this.isLoading = false;
+          console.error(error);
+        }
+      });
+    }
   }
 
   public newThread(): void {
@@ -102,6 +107,10 @@ export class GeneralForumComponent implements OnInit {
         this.isLoading = false;
       }
     })
+  }
+
+  public backToForumTopics(): void {
+    this.goBackToForumTopics.next();
   }
 }
 

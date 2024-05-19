@@ -28,3 +28,11 @@ export interface ThreadDTO {
     title: string;
     text: string;
 }
+
+export interface ForumTopic {
+    callerId: string;
+    name: string;
+    icon: string;
+    description: string;
+    isHovered: boolean;
+}
