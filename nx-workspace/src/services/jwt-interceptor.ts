@@ -5,8 +5,10 @@ import { Observable } from "rxjs";
 
 @Injectable()
 export class JwtInterceptor implements HttpInterceptor{
-    constructor(private authService: AuthService){}
-    intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
+
+    public constructor(private authService: AuthService){}
+
+    public intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
         const isLoggedIn = this.authService.isLoggedIn();
 
         if(isLoggedIn){
@@ -16,7 +18,7 @@ export class JwtInterceptor implements HttpInterceptor{
                 }
             })
         }
-        console.log("Inside JwtInterceptor");
+        
         return next.handle(req);
     }
 }

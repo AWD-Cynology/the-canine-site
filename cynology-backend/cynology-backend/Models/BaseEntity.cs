@@ -1,10 +1,9 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace cynology_backend.Models
+namespace cynology_backend.Models;
+
+public class BaseEntity
 {
-    public class BaseEntity
-    {
-        [Key]
-        public Guid Id { get; set; }
-    }
+    [Key]
+    public Guid Id { get; set; }
 }

@@ -2,44 +2,58 @@ import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { Dog, FavoriteDog } from '../../models/dog.model';
 import { ApiService } from '../../services/api.service';
-import { LoadingService } from '../../services/loading.service';
+import { WrapperComponent } from '../wrapper/wrapper.component';
+import { catchError, forkJoin, map, mergeMap, of } from 'rxjs';
 
 @Component({
   selector: 'app-favorites',
   standalone: true,
-  imports: [ CommonModule ],
+  imports: [ CommonModule, WrapperComponent ],
   templateUrl: './favorites.component.html',
   styleUrls: ['./favorites.component.css', '../../styles.css']
 })
 export class FavoritesComponent implements OnInit {
   public data: FavoriteDog[] = [];
+  public isLoading = false;
 
-  public constructor(private apiService: ApiService,
-    private loadingService: LoadingService) { }
+  public constructor(private apiService: ApiService) { }
 
   public ngOnInit(): void {
-    this.loadingService.setLoadingState(true);
-    this.apiService.getFavoriteDogs().subscribe({
-      next: (response: FavoriteDog[]) => {
-        this.loadingService.setLoadingState(true);
-        for (let dog of response) {
-          this.apiService.getDog(dog).subscribe({
-            next: (response: Dog) => {
-              dog.name = response.breeds[0].name;
-              this.data.push(dog);
-              this.loadingService.setLoadingState(false);
-            },
-            error: (error) => {
-              this.loadingService.setLoadingState(false);
+    this.isLoading = true;
+    this.apiService.getFavoriteDogs()
+    .pipe(
+      mergeMap((response: FavoriteDog[]) => {
+        const dogRequests = response.map(dog =>
+          this.apiService.getDog(dog)
+          .pipe(
+            catchError(error => {
               console.log(error);
-            }
+              return of(null);
+            })
+          )
+        );
+        return forkJoin(dogRequests)
+        .pipe(
+          map((dogs: (Dog | null)[]) => {
+            return response.map((dog, index) => {
+                if (dogs[index]) {
+                  dog.name = dogs[index]?.breeds[0]?.name ?? "Unknown";
+                } else {
+                  dog.name = "Unknown";
+                }
+                
+                return dog;
+            });
           })
-        }
-      },
-      error: (error) => {
-        this.loadingService.setLoadingState(false);
+        );
+      }),
+      catchError(error => {
         console.log(error);
-      }
+        return of([]);
+      })
+    ).subscribe((data: FavoriteDog[]) => {
+      this.data = data;
+      this.isLoading = false;
     });
   }
 }

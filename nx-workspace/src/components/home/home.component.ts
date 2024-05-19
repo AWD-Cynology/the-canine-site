@@ -3,10 +3,12 @@ import { Component, ElementRef, OnInit, Renderer2, ViewChild } from '@angular/co
 import { Router } from '@angular/router';
 import { ApiService } from '../../services/api.service';
 import { forkJoin } from 'rxjs';
-import { LoadingService } from '../../services/loading.service';
+import { WrapperComponent } from '../wrapper/wrapper.component';
 
 @Component({
   selector: 'app-home',
+  standalone: true,
+  imports: [ WrapperComponent ],
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.css']
 })
@@ -14,14 +16,14 @@ export class HomeComponent implements OnInit {
   @ViewChild('tickerContent', { static: true }) tickerContent!: ElementRef;
   public pageSize: number = 172;
   public currentPage: number = 0;
+  public isLoading = false;
 
   constructor(private router: Router,
     private renderer: Renderer2,
-    private apiService: ApiService,
-    private loadingService: LoadingService) { }
+    private apiService: ApiService) { }
 
   public ngOnInit(): void {
-    this.loadingService.setLoadingState(true);
+    this.isLoading = true;
     let params = new HttpParams()
       .set('limit', this.pageSize.toString())
       .set('page', this.currentPage.toString());
@@ -33,7 +35,6 @@ export class HomeComponent implements OnInit {
       votes: this.apiService.getVotes()
     }).subscribe({
       next: ({ breeds, votes }) => {
-        this.loadingService.setLoadingState(true);
         breeds.forEach(x => {
           x.upvotes = 0;
           x.downvotes = 0;
@@ -50,10 +51,10 @@ export class HomeComponent implements OnInit {
           this.renderer.appendChild(this.tickerContent.nativeElement, dogElement);
         });
         
-        this.loadingService.setLoadingState(false);
+        this.isLoading = false;
       },
       error: (error) => {
-        this.loadingService.setLoadingState(false);
+        this.isLoading = false;
         console.error(error);
       }
     });

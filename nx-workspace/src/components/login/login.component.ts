@@ -1,14 +1,14 @@
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
-import { LoginRequest, UserModel } from '../../models/user.model';
-import { LoadingService } from '../../services/loading.service';
+import { LoginRequest } from '../../models/user.model';
 import { AuthService } from '../../services/auth.service';
+import { WrapperComponent } from '../wrapper/wrapper.component';
 
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [FormsModule, HttpClientModule],
+  imports: [ FormsModule, HttpClientModule, WrapperComponent ],
   templateUrl: './login.component.html',
   styleUrl: './login.component.css'
 })
@@ -17,23 +17,26 @@ export class LoginComponent {
     username: "",
     password: ""
   };
+  public isLoading = false;
 
-  public constructor(private authService: AuthService, private loadingService: LoadingService) {}
+  public constructor(private authService: AuthService) {}
 
-  public isLoggedIn(){return this.authService.isLoggedIn();}
+  public isLoggedIn(){
+    return this.authService.isLoggedIn();
+  }
 
   public onLogin() {
-    this.loadingService.setLoadingState(true);
+    this.isLoading = true;
     this.authService.login(this.loginObject).subscribe({
       next: (result: any) => {
-        sessionStorage.setItem('Username', result.userSession.username);
-        sessionStorage.setItem('Name', result.userSession.name);
-        sessionStorage.setItem('Surname', result.userSession.surname);
+        localStorage.setItem('Username', result.userSession.username);
+        localStorage.setItem('Name', result.userSession.name);
+        localStorage.setItem('Surname', result.userSession.surname);
 
         window.location.href = '/';
       },
-      error: error => {
-        this.loadingService.setLoadingState(false);
+      error: () => {
+        this.isLoading = false;
         alert('Invalid login credentials');
       }
     });

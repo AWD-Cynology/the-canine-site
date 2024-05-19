@@ -12,20 +12,12 @@ namespace cynology_backend.Controllers;
 
 [Route("api/CynologyUser")]
 [ApiController]
-public class CynologyUserController : ControllerBase
+public class CynologyUserController(UserManager<CynologyUser> userManager, SignInManager<CynologyUser> signInManager, DataContext dataContext, IConfiguration config) : ControllerBase
 {
-    private readonly UserManager<CynologyUser> userManager;
-    private readonly SignInManager<CynologyUser> signInManager;
-    private readonly DataContext _dataContext;
-    private readonly IConfiguration config;
-
-    public CynologyUserController(UserManager<CynologyUser> userManager, SignInManager<CynologyUser> signInManager, DataContext dataContext, IConfiguration config)
-    {
-        this.userManager = userManager;
-        this.signInManager = signInManager;
-        _dataContext = dataContext;
-        this.config = config;
-    }
+    private readonly UserManager<CynologyUser> userManager = userManager;
+    private readonly SignInManager<CynologyUser> signInManager = signInManager;
+    private readonly DataContext _dataContext = dataContext;
+    private readonly IConfiguration config = config;
 
     [HttpPost("register")]
     public async Task<IActionResult> Register(RegisterModel model)

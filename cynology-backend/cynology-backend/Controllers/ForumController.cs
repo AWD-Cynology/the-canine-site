@@ -1,155 +1,119 @@
 ﻿using cynology_backend.Data;
 using cynology_backend.Models;
 using cynology_backend.Models.DTO_s;
-using cynology_backend.Models.Identity;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
 
-namespace cynology_backend.Controllers
+namespace cynology_backend.Controllers;
+
+[Route("api/forum")]
+[ApiController]
+public class ForumController(DataContext dataContext) : ControllerBase
 {
-    [Route("api/[controller]")]
-    [ApiController]
-    public class ForumController : ControllerBase
+    private readonly DataContext _dataContext = dataContext;
+
+    [HttpGet("threads-for-topic")]
+    public List<Models.Thread> GetThreadsForTopic([FromQuery]string topic)
     {
-        DataContext _dataContext;
-        private readonly UserManager<CynologyUser> _userManager;
+        List<Models.Thread> threads = _dataContext.Threads
+            .Where(z => z.Topic.Equals(topic))
+            .Include(x => x.Replies)
+            .ToList();
 
-        public ForumController(DataContext dataContext, UserManager<CynologyUser> userManager)
+        foreach(var thread in threads)
         {
-            _dataContext = dataContext;
-            _userManager = userManager;
+            thread.CynologyUserId = _dataContext.Users
+                .Where(u => u.Id == thread.CynologyUserId)
+                .Select(u => $"{u.Name} {u.Surname}")
+                .First();
+            foreach(var reply in thread.Replies)
+            {
+                reply.UserId = _dataContext.Users
+                    .Where(u => u.Id == reply.UserId)
+                    .Select(u => $"{u.Name} {u.Surname}")
+                    .First();
+            }
         }
 
-        [HttpGet("[action]")]
-        public List<Models.Thread> GetThreadsForTopic(string topicId) {
-            return _dataContext.Threads.Where(z => z.TopicId.Equals(topicId))
-                .Include(x => x.Replies)
-                .ToList();
-        }
+        return threads;
+    }
 
-        [HttpGet("[action]")]
-        public List<Reply> GetRepliesForThreadId(string threadId)
+    [HttpPost("new-thread")]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+    public async Task<IActionResult> NewThread([FromBody] ThreadDTO threadDTO)
+    {
+        if (!ModelState.IsValid)
         {
-            return _dataContext.Replies.Where(z => z.ThreadId.Equals(threadId)).ToList();
+            return BadRequest(ModelState);
         }
-        
 
-        [HttpPost("[action]")]
-        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-        public async Task<IActionResult> CommentToReply(string commentId, [FromBody] ReplyDTO replyDTO)
+        string? loggedUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        if (string.IsNullOrEmpty(loggedUserId))
         {
-            var threadAccessPoint = await _dataContext.Replies.Where(z => z.Id == Guid.Parse(commentId)).FirstOrDefaultAsync();
-            var loggedUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-
-            if (string.IsNullOrEmpty(loggedUserId))
-            {
-                return BadRequest("User ID not found.");
-            }
-
-            if (threadAccessPoint == null)
-            {
-                return BadRequest("Comment for replying not found.");
-            }
-
-            var reply = new Reply
-            {
-                Id = Guid.NewGuid(),
-                ThreadId = threadAccessPoint.ThreadId,
-                UserId = Guid.Parse(loggedUserId),
-                Text = replyDTO.Text,
-                DatePosted = replyDTO.DatePosted,
-                CommentToReply = Guid.Parse(commentId)
-            };
-
-            _dataContext.Replies.Add(reply);
-            try
-            {
-                await _dataContext.SaveChangesAsync();
-            }
-            catch (DbUpdateException ex)
-            {
-                return BadRequest($"Error creating adding new Reply: {ex.Message}");
-            }
-
-            return Ok(reply);
+            return BadRequest("User ID not found.");
         }
 
-        [HttpPost("[action]")]
-        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-        public async Task<IActionResult> ReplyToThread(string threadId, [FromBody] ReplyDTO replyDTO)
+        Models.Thread thread = new Models.Thread
         {
-            var thread = _dataContext.Threads.Where(z => z.Id.Equals(threadId)).FirstOrDefaultAsync();
-            var loggedUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            Id = Guid.NewGuid(),
+            Topic = threadDTO.Topic,
+            CynologyUserId = loggedUserId,
+            Title = threadDTO.Title,
+            Text = threadDTO.Text,
+            DatePosted = DateTime.Now,
+            Replies = new List<Reply>()
+        };
 
-            if (string.IsNullOrEmpty(loggedUserId))
-            {
-                return BadRequest("User ID not found.");
-            }
-
-            var reply = new Reply
-            {
-                Id = Guid.NewGuid(),
-                ThreadId = Guid.Parse(threadId),
-                UserId = Guid.Parse(loggedUserId),
-                Text = replyDTO.Text,
-                DatePosted = replyDTO.DatePosted,
-                CommentToReply = null
-            };
-
-            _dataContext.Replies.Add(reply);
-            try
-            {
-                await _dataContext.SaveChangesAsync();
-            }
-            catch (DbUpdateException ex)
-            {
-                return BadRequest($"Error creating adding new Reply: {ex.Message}");
-            }
-
-            return Ok(reply);
-        }
-
-        [HttpPost("[action]")]
-        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-        public async Task<IActionResult> NewThread([FromBody] ThreadDTO threadDTO)
+        _dataContext.Threads.Add(thread);
+        try
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
-            var loggedUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            if (string.IsNullOrEmpty(loggedUserId))
-            {
-                return BadRequest("User ID not found.");
-            }
-
-            var thread = new Models.Thread
-            {
-                Id = Guid.NewGuid(),
-                TopicId = threadDTO.TopicId,
-                CynologyUserId = loggedUserId,
-                Title = threadDTO.Title,
-                Text = threadDTO.Text,
-                DatePosted = threadDTO.DatePosted,
-                Replies = null
-            };
-
-            _dataContext.Threads.Add(thread);
-            try
-            {
-                await _dataContext.SaveChangesAsync();
-            }
-            catch (DbUpdateException ex)
-            {
-                return BadRequest($"Error creating new thread: {ex.Message}");
-            }
-
-            return Ok(thread);
+            await _dataContext.SaveChangesAsync();
         }
+        catch (DbUpdateException ex)
+        {
+            return BadRequest($"Error creating new thread: {ex.Message}");
+        }
+
+        return Ok(thread);
+    }
+
+    [HttpPost("reply-to-thread")]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+    public async Task<IActionResult> ReplyToThread([FromBody] ReplyDTO replyDTO)
+    {
+        var thread = _dataContext.Threads
+            .Where(z => z.Id.Equals(replyDTO.ThreadId))
+            .FirstOrDefaultAsync();
+
+        string? loggedUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+        if (string.IsNullOrEmpty(loggedUserId))
+        {
+            return BadRequest("User ID not found.");
+        }
+
+        Reply reply = new Reply
+        {
+            Id = Guid.NewGuid(),
+            ThreadId = Guid.Parse(replyDTO.ThreadId),
+            UserId = loggedUserId,
+            Text = replyDTO.Text,
+            DatePosted = DateTime.Now
+        };
+
+        _dataContext.Replies.Add(reply);
+        try
+        {
+            await _dataContext.SaveChangesAsync();
+        }
+        catch (DbUpdateException ex)
+        {
+            return BadRequest($"Error creating adding new Reply: {ex.Message}");
+        }
+
+        return Ok(reply);
     }
 }

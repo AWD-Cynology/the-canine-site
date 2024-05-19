@@ -22,8 +22,7 @@ label {
     color: #666;
 }
 
-input[type="text"],
-input[type="password"] {
+input[type="text"], input[type="password"] {
     width: 95%;
     padding: 10px;
     border: 1px solid #ccc;

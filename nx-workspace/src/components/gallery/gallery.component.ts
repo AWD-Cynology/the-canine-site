@@ -2,14 +2,16 @@ import { CommonModule } from '@angular/common';
 import { HttpParams } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { Breed, FavoriteDog } from '../../models/dog.model';
-import { forkJoin } from 'rxjs';
+import { forkJoin, switchMap } from 'rxjs';
 import { ApiService } from '../../services/api.service';
-import { LoadingService } from '../../services/loading.service';
+import { WrapperComponent } from '../wrapper/wrapper.component';
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
+import { DogInfoDialogComponent } from '../dog-info-dialog/dog-info-dialog.component';
 
 @Component({
   selector: 'app-gallery',
   standalone: true,
-  imports: [ CommonModule ],
+  imports: [ CommonModule, WrapperComponent, MatDialogModule ],
   templateUrl: './gallery.component.html',
   styleUrls: ['./gallery.component.css','../../styles.css']
 })
@@ -19,12 +21,12 @@ export class GalleryComponent implements OnInit {
   public currentPage: number = 0;
   public totalPages: number = 18;
   public points: number = 0;
+  public isLoading: boolean = false;
 
-  public constructor(private apiService: ApiService,
-    private loadingService: LoadingService) { }
+  public constructor(private apiService: ApiService, private dialog: MatDialog) { }
 
   private fetchData(): void {
-    this.loadingService.setLoadingState(true);
+    this.isLoading = true;
     let params = new HttpParams()
       .set('limit', this.pageSize.toString())
       .set('page', this.currentPage.toString());
@@ -35,7 +37,6 @@ export class GalleryComponent implements OnInit {
       favorites: this.apiService.getFavoriteDogs()
     }).subscribe({
       next: ({ breeds, votes, favorites }) => {
-        this.loadingService.setLoadingState(true);
         breeds.forEach(x => {
           x.upvotes = 0;
           x.downvotes = 0;
@@ -53,10 +54,46 @@ export class GalleryComponent implements OnInit {
           }
         });
         this.data = breeds;
-        this.loadingService.setLoadingState(false);
+        this.isLoading = false;
       },
       error: (error) => {
-        this.loadingService.setLoadingState(false);
+        this.isLoading = false;
+        console.error(error);
+      }
+    });
+  }
+
+  private addDogToFavorites(breed: Breed): void {
+    this.apiService.addFavorite(breed.image.id).subscribe({
+      next: () => {
+        breed.isInFavorites = true;
+        this.isLoading = false;
+      },
+      error: (error) => {
+        this.isLoading = false;
+        console.error(error);
+      }
+    });
+  }
+
+  private removeDogFromFavorites(breed: Breed): void {
+    this.apiService.getFavoriteDogs()
+    .pipe(
+      switchMap((favorites: FavoriteDog[]) => {
+        const favoriteDog = favorites.find(x => x.image_id === breed.image.id);
+        if (!favoriteDog) {
+          throw new Error('Favorite dog not found');
+        }
+
+        return this.apiService.removeFavorite(favoriteDog.id);
+      })
+    ).subscribe({
+      next: () => {
+        breed.isInFavorites = false;
+        this.isLoading = false;
+      },
+      error: (error) => {
+        this.isLoading = false;
         console.error(error);
       }
     });
@@ -68,58 +105,28 @@ export class GalleryComponent implements OnInit {
   }
 
   public changeFavorite(breed: Breed): void {
-    this.loadingService.setLoadingState(true);
+    this.isLoading = true;
     if (breed.isInFavorites) {
-      this.apiService.getFavoriteDogs().subscribe({
-        next: (favorites: FavoriteDog[]) => {
-          this.loadingService.setLoadingState(true);
-          let id = favorites.find(x => x.image_id === breed.image.id)?.id;
-          this.apiService.removeFavorite(id!).subscribe({
-            next: () => {
-              breed.isInFavorites = false;
-              this.loadingService.setLoadingState(false);
-            },
-            error: (error) => {
-              this.loadingService.setLoadingState(false);
-              console.error(error);
-            }
-          });
-        },
-        error: (error) => {
-          this.loadingService.setLoadingState(false);
-          console.error(error);
-        }
-      });
-    }
-    else {
-      this.apiService.addFavorite(breed.image.id).subscribe({
-        next: () => {
-          this.loadingService.setLoadingState(true);
-          breed.isInFavorites = true;
-          this.loadingService.setLoadingState(false);
-        },
-        error: (error) => {
-          this.loadingService.setLoadingState(false);
-          console.error(error);
-        }
-      });
+      this.removeDogFromFavorites(breed);
+    } else {
+      this.addDogToFavorites(breed);
     }
   }
 
   public vote(vote: number, breed: Breed): void {
-    this.loadingService.setLoadingState(true);
+    this.isLoading = true;
     const availablePoints  = parseInt(localStorage.getItem('points') || '0', 10);
-    const username = sessionStorage.getItem('Username') || '';
 
     if (availablePoints <= 0) {
       console.log("You don't have enough points to vote.");
-      this.loadingService.setLoadingState(false);
+      this.isLoading = false;
       return;
     }
 
-    this.apiService.vote(vote, breed.image.id, username).subscribe({
+    const username = localStorage.getItem('Username') || '';
+    this.apiService.vote(vote, breed.image.id, username)
+    .subscribe({
       next: () => {
-        this.loadingService.setLoadingState(true);
         this.points = Math.max(0, availablePoints - 1)
         localStorage.setItem('points', this.points.toString());
 
@@ -128,10 +135,10 @@ export class GalleryComponent implements OnInit {
         } else {
           breed.downvotes = (breed.downvotes || 0) + 1;
         }
-        this.loadingService.setLoadingState(false);
+        this.isLoading = false;
       },
       error: (error) => {
-        this.loadingService.setLoadingState(false);
+        this.isLoading = false;
         console.error(error);
       }
     });
@@ -155,5 +162,13 @@ export class GalleryComponent implements OnInit {
   public goToLastPage(): void {
     this.currentPage = this.totalPages - 1;
     this.fetchData();
+  }
+
+  public openDialog(breed: Breed): void {
+    this.dialog.open(DogInfoDialogComponent, {
+      width: '50vw',
+      height: '90vh',
+      data: breed
+    });
   }
 }

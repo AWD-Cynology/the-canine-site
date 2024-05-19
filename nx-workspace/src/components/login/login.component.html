@@ -1,17 +1,19 @@
-<div class="container">
-    <h2>Login</h2>
-    <form id="loginForm">
-        <div class="form-group">
-            <label for="username">Username</label>
-            <input type="text" [(ngModel)]="loginObject.username" id="username" name="username" required>
+<app-wrapper [isLoading]="isLoading">
+    <div class="container">
+        <h2>Login</h2>
+        <form id="loginForm">
+            <div class="form-group">
+                <label for="username">Username</label>
+                <input type="text" [(ngModel)]="loginObject.username" id="username" name="username" required>
+            </div>
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" [(ngModel)]="loginObject.password" id="password" name="password" required>
+            </div>
+            <input type="submit" (click)="onLogin()" value="Login">
+        </form>
+        <div class="login-link">
+            <a href="/register">Don't have an account? Register here</a>
         </div>
-        <div class="form-group">
-            <label for="password">Password</label>
-            <input type="password" [(ngModel)]="loginObject.password" id="password" name="password" required>
-        </div>
-        <input type="submit" (click)="onLogin()" value="Login">
-    </form>
-    <div class="login-link">
-        <a href="/register">Don't have an account? Register here</a>
     </div>
-</div>
+</app-wrapper>

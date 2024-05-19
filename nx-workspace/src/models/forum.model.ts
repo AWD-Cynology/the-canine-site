@@ -1,4 +1,4 @@
-export interface Thread{
+export interface Thread {
     topicId: string;
     cynologyUserId: string;
     title: string;
@@ -8,7 +8,7 @@ export interface Thread{
     id: string;
 }
 
-export interface Reply{
+export interface Reply {
     threadId: string;
     userId: string;
     text: string;
@@ -17,14 +17,22 @@ export interface Reply{
     id: string;
 }
 
-export interface ReplyDTO{
+export interface ReplyDTO {
     text: string;
-    datePosted: string;
+    threadId: string;
+    commentId?: string;
 }
 
-export interface ThreadDTO{
-    topicId: string;
+export interface ThreadDTO {
+    topic: string;
     title: string;
     text: string;
-    datePosted: string;
+}
+
+export interface ForumTopic {
+    callerId: string;
+    name: string;
+    icon: string;
+    description: string;
+    isHovered: boolean;
 }

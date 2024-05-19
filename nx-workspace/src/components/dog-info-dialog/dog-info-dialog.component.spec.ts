@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { TrainingComponent } from './training.component';
+import { DogInfoDialogComponent } from './dog-info-dialog.component';
 
-describe('TrainingComponent', () => {
-  let component: TrainingComponent;
-  let fixture: ComponentFixture<TrainingComponent>;
+describe('DogInfoDialogComponent', () => {
+  let component: DogInfoDialogComponent;
+  let fixture: ComponentFixture<DogInfoDialogComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [TrainingComponent]
+      imports: [DogInfoDialogComponent]
     })
     .compileComponents();
     
-    fixture = TestBed.createComponent(TrainingComponent);
+    fixture = TestBed.createComponent(DogInfoDialogComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
