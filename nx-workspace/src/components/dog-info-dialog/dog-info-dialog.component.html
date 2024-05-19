@@ -1,0 +1,13 @@
+<div class="breed-dialog">
+    <h1 mat-dialog-title>{{ data.name }}</h1>
+    <div mat-dialog-content>
+      <img [src]="data.image.url" alt="{{ data.name }}">
+      <p><strong>Breed Group:</strong> {{ data.breed_group }}</p>
+      <p><strong>Bred For:</strong> {{ data.bred_for }}</p>
+      <p><strong>Life Span:</strong> {{ data.life_span }}</p>
+      <p><strong>Temperament:</strong> {{ data.temperament }}</p>
+      <p><strong>Origin:</strong> {{ data.origin }}</p>
+      <p><strong>Weight:</strong> {{ data.weight.metric }} kg</p>
+      <p><strong>Height:</strong> {{ data.height.metric }} cm</p>
+    </div>
+</div>

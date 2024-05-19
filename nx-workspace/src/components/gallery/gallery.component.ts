@@ -5,11 +5,13 @@ import { Breed, FavoriteDog } from '../../models/dog.model';
 import { forkJoin, switchMap } from 'rxjs';
 import { ApiService } from '../../services/api.service';
 import { WrapperComponent } from '../wrapper/wrapper.component';
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
+import { DogInfoDialogComponent } from '../dog-info-dialog/dog-info-dialog.component';
 
 @Component({
   selector: 'app-gallery',
   standalone: true,
-  imports: [ CommonModule, WrapperComponent ],
+  imports: [ CommonModule, WrapperComponent, MatDialogModule ],
   templateUrl: './gallery.component.html',
   styleUrls: ['./gallery.component.css','../../styles.css']
 })
@@ -21,7 +23,7 @@ export class GalleryComponent implements OnInit {
   public points: number = 0;
   public isLoading: boolean = false;
 
-  public constructor(private apiService: ApiService) { }
+  public constructor(private apiService: ApiService, private dialog: MatDialog) { }
 
   private fetchData(): void {
     this.isLoading = true;
@@ -160,5 +162,13 @@ export class GalleryComponent implements OnInit {
   public goToLastPage(): void {
     this.currentPage = this.totalPages - 1;
     this.fetchData();
+  }
+
+  public openDialog(breed: Breed): void {
+    this.dialog.open(DogInfoDialogComponent, {
+      width: '50vw',
+      height: '90vh',
+      data: breed
+    });
   }
 }
