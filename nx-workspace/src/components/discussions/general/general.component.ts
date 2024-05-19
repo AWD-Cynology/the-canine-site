@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { ReplyDTO, Thread, ThreadDTO } from '../../../models/forum.model'
 import { ForumService } from '../../../services/forum.service';
 import { WrapperComponent } from '../../wrapper/wrapper.component';
+import { error } from 'node:console';
 
 @Component({
   selector: 'app-general-forum',
@@ -62,6 +63,7 @@ export class GeneralForumComponent implements OnInit {
   }
 
   public replyToThread(threadId: string): void {
+    this.isLoading = true;
     const reply: ReplyDTO = {
       text: 'this is a reply',
       threadId: threadId
@@ -70,7 +72,11 @@ export class GeneralForumComponent implements OnInit {
     this.forumApiService.replyToThread(reply)
     .subscribe({
       next: (result) => {
-        console.log(result);
+        const thread = this.threads.find(t => t.id === threadId);
+        if (thread) {
+          thread.replies.push(result);
+        }
+        this.isLoading = false;
       },
       error: error => {
         this.isLoading = false;
@@ -79,31 +85,23 @@ export class GeneralForumComponent implements OnInit {
     });
   }
 
-  public replyToDiscussion(discussion: Thread, textArea: string, areaIndex: number): void {
-    // if(textArea.trim() !== ''){
-    //   const newReply: Reply = {
-    //     username: 'User456', 
-    //     timestamp: new Date(),
-    //     content: textArea,
-    //     replies: []
-    //   };
-    //   discussion.replies.push(newReply);
-    //   this.discussionTextAreas[areaIndex]='';
-    // }
-  }
-
-  // Function to reply to a discussion
-  public replyToReply(replyId: string): void {
-    // const newReply: Reply = {
-    //   username: 'User456', // Replace with the actual username of the user
-    //   timestamp: new Date(),
-    //   content: 'Reply to reply content',
-    //   replies: []
-    // };
-    // Here you might want to add the new reply to the specific reply being replied to.
-    // For example, you could have a nested structure to represent replies to replies.
-    // For simplicity, let's assume a flat structure for now:
-    // reply.replies.push(newReply);
+  public commentToReply(replyId: string, threadId: string): void {
+    const comment: ReplyDTO = {
+      threadId: threadId,
+      text: 'this is a comment to a reply',
+      commentId: replyId
+    };
+    this.forumApiService.commentToReply(comment)
+    .subscribe({
+      next: result => {
+        this.isLoading = true;
+        this.isLoading = false;
+      },
+      error: error => {
+        console.log(error);
+        this.isLoading = false;
+      }
+    })
   }
 }
 

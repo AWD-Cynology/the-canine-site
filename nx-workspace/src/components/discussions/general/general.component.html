@@ -31,7 +31,7 @@
               <span class="timestamp">{{ reply.datePosted | date }}</span>
             </header>
             <p class="reply-text">{{ reply.text }}</p>
-            <button class="reply-button" (click)="replyToReply(reply.id)">Reply to user</button>
+            <button class="reply-button" (click)="commentToReply(reply.id, discussion.id)">Reply to user</button>
           </article>
         </div>
       </article>

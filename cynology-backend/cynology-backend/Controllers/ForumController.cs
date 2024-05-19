@@ -16,7 +16,8 @@ public class ForumController(DataContext dataContext) : ControllerBase
     private readonly DataContext _dataContext = dataContext;
 
     [HttpGet("threads-for-topic")]
-    public List<Models.Thread> GetThreadsForTopic([FromQuery]string topic) {
+    public List<Models.Thread> GetThreadsForTopic([FromQuery]string topic)
+    {
         return _dataContext.Threads.Where(z => z.Topic.Equals(topic))
             .Include(x => x.Replies)
             .ToList();
@@ -109,10 +110,10 @@ public class ForumController(DataContext dataContext) : ControllerBase
 
     [HttpPost("comment-to-reply")]
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-    public async Task<IActionResult> CommentToReply(string commentId, [FromBody] ReplyDTO replyDTO)
+    public async Task<IActionResult> CommentToReply([FromBody] ReplyDTO replyDTO)
     {
         Reply? threadAccessPoint = await _dataContext.Replies
-            .Where(z => z.Id == Guid.Parse(commentId))
+            .Where(z => z.Id == Guid.Parse(replyDTO.CommentId!))
             .FirstOrDefaultAsync();
 
         string? loggedUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
@@ -134,7 +135,7 @@ public class ForumController(DataContext dataContext) : ControllerBase
             UserId = Guid.Parse(loggedUserId),
             Text = replyDTO.Text,
             DatePosted = DateTime.Now,
-            CommentToReply = Guid.Parse(commentId)
+            CommentToReply = Guid.Parse(replyDTO.CommentId!)
         };
 
         _dataContext.Replies.Add(reply);

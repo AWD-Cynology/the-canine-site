@@ -28,4 +28,9 @@ export class ForumService {
     const accessToken = `Bearer ${localStorage.getItem('accessToken')}`;
     return this.http.post<Reply>(`${this.forumApiUrl}/reply-to-thread`, replyDTO, { headers: new HttpHeaders({ Authorization: accessToken }) });
   }
+
+  public commentToReply(replyDTO: ReplyDTO): Observable<Reply> {
+    const accessToken = `Bearer ${localStorage.getItem('accessToken')}`;
+    return this.http.post<Reply>(`${this.forumApiUrl}/comment-to-reply`, replyDTO, { headers: new HttpHeaders({ Authorization: accessToken }) });
+  }
 }

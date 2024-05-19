@@ -20,6 +20,7 @@ export interface Reply {
 export interface ReplyDTO {
     text: string;
     threadId: string;
+    commentId?: string;
 }
 
 export interface ThreadDTO {
