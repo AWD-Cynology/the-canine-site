@@ -14,7 +14,11 @@
     <section class="new-discussion">
       <input placeholder="Enter thread title" [(ngModel)]="newThreadTitle">
       <textarea placeholder="Start a new discussion" [(ngModel)]="newThreadContent"></textarea>
-      <button (click)="newThread()">Start Discussion</button>
+      <button (click)="newThread()"
+      [disabled]="!newThreadTitle || !newThreadContent"
+      [ngClass]="{ 'disabled-button': !newThreadTitle || !newThreadContent }">
+        Start Discussion
+      </button>
     </section>
 
     <!-- List of Discussions -->
@@ -28,7 +32,13 @@
         <p class="discussion-text">{{ discussion.text }}</p>
 
         <div class="discussion-footer">
-          <button class="comment-button" (click)="replyToThread(discussion.id)">Comment</button>
+          <input class="reply-to-thread-input" type="text" placeholder="Reply to this thread" [(ngModel)]="replyMessages[i]">
+          <button class="comment-button"
+            (click)="replyToThread(discussion.id, i)"
+            [disabled]="!replyMessages[i]"
+            [ngClass]="{ 'disabled-button': !replyMessages[i] }">
+            Comment
+          </button>
         </div>
 
         <!-- Replies -->

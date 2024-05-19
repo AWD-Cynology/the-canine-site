@@ -166,3 +166,16 @@
 .topic-title {
     margin: 0 auto;
 }
+
+.reply-to-thread-input {
+    width: 100%;
+    padding: 10px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    background-color: #d7ccc8;
+}
+
+.disabled-button {
+    opacity: 0.7;
+    cursor: not-allowed !important;
+}
