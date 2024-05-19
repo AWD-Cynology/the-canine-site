@@ -114,7 +114,6 @@
 
 .reply-button:hover {
     background-color: #4CAF50;
-    transform: translateY(-2px);
 }
 
 .discussion-footer {
@@ -135,7 +134,6 @@
   
 .comment-button:hover {
     background-color: #4CAF50;
-    transform: translateY(-2px);
 }
 
 .back-link {
@@ -178,4 +176,8 @@
 .disabled-button {
     opacity: 0.7;
     cursor: not-allowed !important;
+}
+
+.disabled-button:hover {
+    background-color: #2d6a4f !important;
 }

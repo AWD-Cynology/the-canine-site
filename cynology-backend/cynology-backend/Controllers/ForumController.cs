@@ -18,9 +18,19 @@ public class ForumController(DataContext dataContext) : ControllerBase
     [HttpGet("threads-for-topic")]
     public List<Models.Thread> GetThreadsForTopic([FromQuery]string topic)
     {
-        return _dataContext.Threads.Where(z => z.Topic.Equals(topic))
+        List<Models.Thread> threads = _dataContext.Threads.Where(z => z.Topic.Equals(topic))
             .Include(x => x.Replies)
             .ToList();
+
+        foreach(var thread in threads)
+        {
+            thread.CynologyUserId = _dataContext.Users
+                .Where(u => u.Id == thread.CynologyUserId)
+                .Select(u => $"{u.Name} {u.Surname}")
+                .First();
+        }
+
+        return threads;
     }
 
     [HttpGet("replies-for-thread")]
