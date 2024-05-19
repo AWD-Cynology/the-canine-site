@@ -1,70 +1,131 @@
+.forum-container {
+    margin: 30px auto;
+    width: 90%;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    background-color: #ffffff;
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    color: #333;
+}
+
+.forum-container h2 {
+    text-align: center;
+    margin-bottom: 20px;
+    color: #2d6a4f;
+}
+
 .new-discussion {
     margin-bottom: 20px;
+    display: flex;
+    flex-direction: column;
 }
-  
-.new-discussion input {
-    width: calc(50% - 20px);
-    padding: 5px;
-    margin-bottom: 5px;
-    border-radius: 10px;
-    border: 1px solid #ccc;
-}
-    
+
+.new-discussion input,
 .new-discussion textarea {
-    width: calc(100% - 20px);
     padding: 10px;
     margin-bottom: 10px;
-    border-radius: 10px;
+    border-radius: 5px;
     border: 1px solid #ccc;
+    background-color: #d7ccc8;
 }
-    
+
 .new-discussion button {
-    width: calc(100% - 20px);
+    width: 100%;
     padding: 10px;
-    background-color: #439b46;
+    background-color: #2d6a4f;
     color: #ffffff;
     border: none;
-    border-radius: 10px;
+    border-radius: 5px;
     cursor: pointer;
     transition: background-color 0.3s ease;
 }
-    
+
 .new-discussion button:hover {
-    background-color: #317234;
+    background-color: #4CAF50;
 }
 
 .discussion {
-    background-color: #553b32;
-    border-radius: 20px;
-    box-shadow: 5px 5px 10px 5px rgba(0, 0, 0, 0.1);
+    background-color: #f8f8f8;
+    border-radius: 10px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     padding: 20px;
     margin-bottom: 20px;
+    border-left: 5px solid #2d6a4f;
 }
-    
+
 .discussion-info {
     display: flex;
     justify-content: space-between;
     align-items: center;
     margin-bottom: 10px;
+    color: #666;
 }
 
-.username, .timestamp {
+.username,
+.timestamp {
     font-size: 14px;
+}
+
+.discussion-title {
+    margin-bottom: 10px;
+    color: #2d6a4f;
+}
+
+.discussion-text {
+    margin-bottom: 10px;
+    color: #333;
+}
+
+.replies {
+    margin-top: 10px;
+}
+
+.reply {
+    background-color: #a5d6a7;
+    border-radius: 5px;
+    padding: 10px;
     margin-bottom: 10px;
 }
-  
-.reply-content {
-    margin-top: 5px;
-    position: relative;
+
+.reply-info {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 5px;
+    color: #666;
+}
+
+.reply-text {
+    color: #333;
 }
 
 .reply-button {
-    position: absolute;
-    bottom: 0; 
-    right: 0;
-    width: auto;
-    padding: 8px 12px;
-    background-color: #6d4c41;
+    padding: 5px 10px;
+    background-color: #2d6a4f;
+    color: #ffffff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+.reply-button:hover {
+    background-color: #4CAF50;
+    transform: translateY(-2px);
+}
+
+.discussion-footer {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: auto;
+}
+  
+.comment-button {
+    padding: 10px;
+    background-color: #2d6a4f;
     color: #ffffff;
     border: none;
     border-radius: 5px;
@@ -72,46 +133,7 @@
     transition: background-color 0.3s ease, transform 0.3s ease;
 }
   
-.reply-button:hover {
-    background-color: #6b5249;
-    transform: translateX(-2px);
-}
-  
-.reply {
-    background-color: #a5d6a7;
-    border-radius: 10px;
-    padding: 10px;
-    margin-bottom: 10px;
-}
-  
-.reply-info {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-  
-.replies {
-    margin-top: 10px;
-}
-  
-.discussion-content {
-    margin-bottom: 10px;
-}
-
-.forum-container {
-    margin: 30px auto;
-    width: 90%;
-    display: flex;
-    flex-direction: column;
-    align-items: stretch;
-    background-color: #6d4c41;
-    border-radius: 20px;
-    padding: 20px;
-    box-shadow: 10px 10px 10px 10px rgba(0, 0, 0, 0.1);
-    color: #ffffff;
-}
-  
-.forum-container h2 {
-    text-align: center;
-    margin-bottom: 20px;
+.comment-button:hover {
+    background-color: #4CAF50;
+    transform: translateY(-2px);
 }

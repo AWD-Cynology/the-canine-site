@@ -4,5 +4,5 @@ public class ReplyDTO
 {
     public string Text { get; set; }
 
-    public DateTime DatePosted { get; set; }
+    public string ThreadId { get; set; }
 }

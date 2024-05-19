@@ -1,7 +1,7 @@
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { Reply, Thread, ThreadDTO } from '../models/forum.model';
+import { Reply, ReplyDTO, Thread, ThreadDTO } from '../models/forum.model';
 
 @Injectable({
   providedIn: 'root'
@@ -22,5 +22,10 @@ export class ForumService {
   public newThread(threadDTO: ThreadDTO): Observable<Thread> {
     const accessToken = `Bearer ${localStorage.getItem('accessToken')}`;
     return this.http.post<Thread>(`${this.forumApiUrl}/new-thread`, threadDTO, { headers: new HttpHeaders({ Authorization: accessToken }) });
+  }
+
+  public replyToThread(replyDTO: ReplyDTO): Observable<Reply> {
+    const accessToken = `Bearer ${localStorage.getItem('accessToken')}`;
+    return this.http.post<Reply>(`${this.forumApiUrl}/reply-to-thread`, replyDTO, { headers: new HttpHeaders({ Authorization: accessToken }) });
   }
 }

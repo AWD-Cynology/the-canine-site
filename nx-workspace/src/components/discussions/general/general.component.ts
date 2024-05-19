@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { Thread, ThreadDTO } from '../../../models/forum.model'
+import { ReplyDTO, Thread, ThreadDTO } from '../../../models/forum.model'
 import { ForumService } from '../../../services/forum.service';
 import { WrapperComponent } from '../../wrapper/wrapper.component';
 
@@ -61,6 +61,23 @@ export class GeneralForumComponent implements OnInit {
     }
   }
 
+  public replyToThread(threadId: string): void {
+    const reply: ReplyDTO = {
+      text: 'this is a reply',
+      threadId: threadId
+    };
+
+    this.forumApiService.replyToThread(reply)
+    .subscribe({
+      next: (result) => {
+        console.log(result);
+      },
+      error: error => {
+        this.isLoading = false;
+        console.log(error);
+      }
+    });
+  }
 
   public replyToDiscussion(discussion: Thread, textArea: string, areaIndex: number): void {
     // if(textArea.trim() !== ''){

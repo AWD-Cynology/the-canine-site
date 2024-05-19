@@ -1,42 +1,40 @@
 <app-wrapper [isLoading]="isLoading">
   <div class="forum-container">
     <h2>General Discussion</h2>
-    
+
     <!-- New Discussion Form -->
-    <div class="new-discussion">
+    <section class="new-discussion">
       <input placeholder="Enter thread title" [(ngModel)]="newThreadTitle">
       <textarea placeholder="Start a new discussion" [(ngModel)]="newThreadContent"></textarea>
       <button (click)="newThread()">Start Discussion</button>
-    </div>
-    
+    </section>
+
     <!-- List of Discussions -->
-    <div class="discussion-list">
-      <div *ngFor="let discussion of threads; let i = index">
-        <div class="discussion">
-          <div class="discussion-info">
-            <span class="username">{{ discussion.cynologyUserId }}</span>
-            <span class="timestamp">{{ discussion.datePosted| date }}</span>
-          </div>
-          <h4 class="discussion-content">{{ discussion.title }}</h4>
-          <p class="discussion-content">{{ discussion.text }}</p>
-  
-          <!-- Replies -->
-          <div class="replies">
-            <div *ngFor="let reply of discussion.replies">
-              <div class="reply">
-                <div class="reply-info">
-                  <span class="username">{{ reply.userId }}</span>
-                  <span class="timestamp">{{ reply.datePosted| date }}</span>
-                </div>
-                <div class="reply-content">{{ reply.text }}
-                  <button class="reply-button" (click)="replyToReply(reply.id)">Reply to user</button>
-                </div>
-              </div>
-            </div>
-          </div>
+    <section class="discussion-list">
+      <article *ngFor="let discussion of threads; let i = index" class="discussion">
+        <header class="discussion-info">
+          <span class="username">{{ discussion.cynologyUserId }}</span>
+          <span class="timestamp">{{ discussion.datePosted | date }}</span>
+        </header>
+        <h4 class="discussion-title">{{ discussion.title }}</h4>
+        <p class="discussion-text">{{ discussion.text }}</p>
+
+        <div class="discussion-footer">
+          <button class="comment-button" (click)="replyToThread(discussion.id)">Comment</button>
         </div>
-      </div>
-    </div>
+
+        <!-- Replies -->
+        <div class="replies">
+          <article *ngFor="let reply of discussion.replies" class="reply">
+            <header class="reply-info">
+              <span class="username">{{ reply.userId }}</span>
+              <span class="timestamp">{{ reply.datePosted | date }}</span>
+            </header>
+            <p class="reply-text">{{ reply.text }}</p>
+            <button class="reply-button" (click)="replyToReply(reply.id)">Reply to user</button>
+          </article>
+        </div>
+      </article>
+    </section>
   </div>
 </app-wrapper>
-  

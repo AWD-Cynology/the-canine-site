@@ -71,10 +71,10 @@ public class ForumController(DataContext dataContext) : ControllerBase
 
     [HttpPost("reply-to-thread")]
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-    public async Task<IActionResult> ReplyToThread(string threadId, [FromBody] ReplyDTO replyDTO)
+    public async Task<IActionResult> ReplyToThread([FromBody] ReplyDTO replyDTO)
     {
         var thread = _dataContext.Threads
-            .Where(z => z.Id.Equals(threadId))
+            .Where(z => z.Id.Equals(replyDTO.ThreadId))
             .FirstOrDefaultAsync();
 
         string? loggedUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
@@ -87,10 +87,10 @@ public class ForumController(DataContext dataContext) : ControllerBase
         Reply reply = new Reply
         {
             Id = Guid.NewGuid(),
-            ThreadId = Guid.Parse(threadId),
+            ThreadId = Guid.Parse(replyDTO.ThreadId),
             UserId = Guid.Parse(loggedUserId),
             Text = replyDTO.Text,
-            DatePosted = replyDTO.DatePosted,
+            DatePosted = DateTime.Now,
             CommentToReply = null
         };
 
@@ -133,7 +133,7 @@ public class ForumController(DataContext dataContext) : ControllerBase
             ThreadId = threadAccessPoint.ThreadId,
             UserId = Guid.Parse(loggedUserId),
             Text = replyDTO.Text,
-            DatePosted = replyDTO.DatePosted,
+            DatePosted = DateTime.Now,
             CommentToReply = Guid.Parse(commentId)
         };
 
