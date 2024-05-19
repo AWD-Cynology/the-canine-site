@@ -10,7 +10,6 @@
       <h2 class="topic-title">{{ topicId | titlecase }} Discussion</h2>
     </div>
 
-    <!-- New Discussion Form -->
     <section class="new-discussion">
       <input placeholder="Enter thread title" [(ngModel)]="newThreadTitle">
       <textarea placeholder="Start a new discussion" [(ngModel)]="newThreadContent"></textarea>
@@ -21,7 +20,6 @@
       </button>
     </section>
 
-    <!-- List of Discussions -->
     <section class="discussion-list">
       <article *ngFor="let discussion of threads; let i = index" class="discussion">
         <header class="discussion-info">
@@ -41,7 +39,6 @@
           </button>
         </div>
 
-        <!-- Replies -->
         <div class="replies">
           <article *ngFor="let reply of discussion.replies" class="reply">
             <header class="reply-info">

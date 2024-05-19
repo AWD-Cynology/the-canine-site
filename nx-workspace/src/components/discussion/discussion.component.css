@@ -171,6 +171,7 @@
     border-radius: 5px;
     border: 1px solid #ccc;
     background-color: #d7ccc8;
+    margin-right: 0.5rem;
 }
 
 .disabled-button {
