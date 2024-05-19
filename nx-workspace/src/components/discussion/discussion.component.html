@@ -13,7 +13,7 @@
     <section class="new-discussion">
       <input placeholder="Enter thread title" [(ngModel)]="newThreadTitle">
       <textarea placeholder="Start a new discussion" [(ngModel)]="newThreadContent"></textarea>
-      <button (click)="newThread()"
+      <button (click)="createNewThread()"
       [disabled]="!newThreadTitle || !newThreadContent"
       [ngClass]="{ 'disabled-button': !newThreadTitle || !newThreadContent }">
         Start Discussion
@@ -46,7 +46,6 @@
               <span class="timestamp">{{ reply.datePosted | date }}</span>
             </header>
             <p class="reply-text">{{ reply.text }}</p>
-            <button class="reply-button" (click)="commentToReply(reply.id, discussion.id)">Reply to user</button>
           </article>
         </div>
       </article>

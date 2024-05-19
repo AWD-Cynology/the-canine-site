@@ -18,7 +18,8 @@ public class ForumController(DataContext dataContext) : ControllerBase
     [HttpGet("threads-for-topic")]
     public List<Models.Thread> GetThreadsForTopic([FromQuery]string topic)
     {
-        List<Models.Thread> threads = _dataContext.Threads.Where(z => z.Topic.Equals(topic))
+        List<Models.Thread> threads = _dataContext.Threads
+            .Where(z => z.Topic.Equals(topic))
             .Include(x => x.Replies)
             .ToList();
 
@@ -28,17 +29,16 @@ public class ForumController(DataContext dataContext) : ControllerBase
                 .Where(u => u.Id == thread.CynologyUserId)
                 .Select(u => $"{u.Name} {u.Surname}")
                 .First();
+            foreach(var reply in thread.Replies)
+            {
+                reply.UserId = _dataContext.Users
+                    .Where(u => u.Id == reply.UserId)
+                    .Select(u => $"{u.Name} {u.Surname}")
+                    .First();
+            }
         }
 
         return threads;
-    }
-
-    [HttpGet("replies-for-thread")]
-    public List<Reply> GetRepliesForThread([FromQuery]string threadId)
-    {
-        return _dataContext.Replies
-            .Where(z => z.ThreadId.Equals(threadId))
-            .ToList();
     }
 
     [HttpPost("new-thread")]
@@ -99,53 +99,9 @@ public class ForumController(DataContext dataContext) : ControllerBase
         {
             Id = Guid.NewGuid(),
             ThreadId = Guid.Parse(replyDTO.ThreadId),
-            UserId = Guid.Parse(loggedUserId),
+            UserId = loggedUserId,
             Text = replyDTO.Text,
-            DatePosted = DateTime.Now,
-            CommentToReply = null
-        };
-
-        _dataContext.Replies.Add(reply);
-        try
-        {
-            await _dataContext.SaveChangesAsync();
-        }
-        catch (DbUpdateException ex)
-        {
-            return BadRequest($"Error creating adding new Reply: {ex.Message}");
-        }
-
-        return Ok(reply);
-    }
-
-    [HttpPost("comment-to-reply")]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-    public async Task<IActionResult> CommentToReply([FromBody] ReplyDTO replyDTO)
-    {
-        Reply? threadAccessPoint = await _dataContext.Replies
-            .Where(z => z.Id == Guid.Parse(replyDTO.CommentId!))
-            .FirstOrDefaultAsync();
-
-        string? loggedUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-
-        if (string.IsNullOrEmpty(loggedUserId))
-        {
-            return BadRequest("User ID not found.");
-        }
-
-        if (threadAccessPoint == null)
-        {
-            return BadRequest("Comment for replying not found.");
-        }
-
-        Reply reply = new Reply
-        {
-            Id = Guid.NewGuid(),
-            ThreadId = threadAccessPoint.ThreadId,
-            UserId = Guid.Parse(loggedUserId),
-            Text = replyDTO.Text,
-            DatePosted = DateTime.Now,
-            CommentToReply = Guid.Parse(replyDTO.CommentId!)
+            DatePosted = DateTime.Now
         };
 
         _dataContext.Replies.Add(reply);

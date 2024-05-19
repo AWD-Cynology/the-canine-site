@@ -26,8 +26,11 @@ export class DiscussionComponent implements OnInit {
 
   public ngOnInit(): void {
     this.isLoading = true;
-    if (this.topicId) {
-      this.forumApiService.getThreadsForTopic(this.topicId)
+    if (!this.topicId) {
+      return;
+    }
+
+    this.forumApiService.getThreadsForTopic(this.topicId)
       .subscribe({
         next: (threads) => {
           this.threads = threads
@@ -38,10 +41,9 @@ export class DiscussionComponent implements OnInit {
           console.error(error);
         }
       });
-    }
   }
 
-  public newThread(): void {
+  public createNewThread(): void {
     this.isLoading = true;
     if (!this.topicId) {
       this.isLoading = false;
@@ -54,7 +56,7 @@ export class DiscussionComponent implements OnInit {
       text: this.newThreadContent
     };
 
-    this.forumApiService.newThread(newThread)
+    this.forumApiService.createNewThread(newThread)
     .subscribe({
       next: (thread) => {
         this.threads.push(thread);
@@ -93,25 +95,6 @@ export class DiscussionComponent implements OnInit {
         console.log(error);
       }
     });
-  }
-
-  public commentToReply(replyId: string, threadId: string): void {
-    const comment: ReplyDTO = {
-      threadId: threadId,
-      text: 'this is a comment to a reply',
-      commentId: replyId
-    };
-    this.forumApiService.commentToReply(comment)
-    .subscribe({
-      next: result => {
-        this.isLoading = true;
-        this.isLoading = false;
-      },
-      error: error => {
-        console.log(error);
-        this.isLoading = false;
-      }
-    })
   }
 
   public backToForumTopics(): void {

@@ -9,13 +9,11 @@ public class Reply : BaseEntity
     public Guid ThreadId { get; set; }
 
     [ForeignKey("CynologyUser")]
-    public Guid UserId { get; set; }
+    public string UserId { get; set; }
 
     [Required]
     public string Text { get; set; }
 
     [Required]
     public DateTime DatePosted { get; set; }
-
-    public Guid? CommentToReply { get; set; }
 }
