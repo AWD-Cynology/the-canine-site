@@ -1,12 +1,12 @@
 <app-wrapper [isLoading]="isLoading">
   <div class="forum-container">
+    <div class="back-link" (click)="backToForumTopics()">
+      <svg viewBox="0 0 20 20" class="back-arrow">
+        <path d="M10 15l-5-5 5-5v10z" />
+      </svg>
+      <span class="back-text">Back to forum topics</span>
+    </div>
     <div class="topic-header">
-      <div class="back-link" (click)="backToForumTopics()">
-        <svg viewBox="0 0 20 20" class="back-arrow">
-          <path d="M10 15l-5-5 5-5v10z" />
-        </svg>
-        <span class="back-text">Back to forum topics</span>
-      </div>
       <h2 class="topic-title">{{ topicId | titlecase }} Discussion</h2>
     </div>
 

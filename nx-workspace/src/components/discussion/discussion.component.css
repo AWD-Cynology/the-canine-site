@@ -9,6 +9,7 @@
     padding: 20px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     color: #333;
+    position: relative;
 }
 
 .forum-container h2 {
@@ -121,7 +122,7 @@
     justify-content: flex-end;
     margin-top: auto;
 }
-  
+
 .comment-button {
     padding: 10px;
     background-color: #2d6a4f;
@@ -131,16 +132,18 @@
     cursor: pointer;
     transition: background-color 0.3s ease, transform 0.3s ease;
 }
-  
+
 .comment-button:hover {
     background-color: #4CAF50;
 }
 
 .back-link {
+    position: absolute;
+    top: 20px;
+    left: 20px;
     display: flex;
     align-items: center;
     cursor: pointer;
-    margin-bottom: 10px;
     color: #2d6a4f;
 }
 
@@ -154,15 +157,21 @@
 .back-text {
     color: #2d6a4f;
     font-weight: bold;
+    margin-left: auto;
 }
 
 .topic-header {
     display: flex;
-    justify-content: space-between;
+    justify-content: center;
+    align-items: center;
+    padding-left: 40px;
+    padding-right: 20px;
+    margin-bottom: 20px;
 }
 
 .topic-title {
-    margin: 0 auto;
+    margin: 0;
+    color: #2d6a4f;
 }
 
 .reply-to-thread-input {

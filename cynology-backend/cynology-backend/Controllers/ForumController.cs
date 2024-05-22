@@ -77,6 +77,11 @@ public class ForumController(DataContext dataContext) : ControllerBase
             return BadRequest($"Error creating new thread: {ex.Message}");
         }
 
+        thread.CynologyUserId = _dataContext.Users
+                    .Where(u => u.Id == thread.CynologyUserId)
+                    .Select(u => $"{u.Name} {u.Surname}")
+                    .First();
+
         return Ok(thread);
     }
 
@@ -84,9 +89,10 @@ public class ForumController(DataContext dataContext) : ControllerBase
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public async Task<IActionResult> ReplyToThread([FromBody] ReplyDTO replyDTO)
     {
-        var thread = _dataContext.Threads
+        var thread = await _dataContext.Threads
             .Where(z => z.Id.Equals(replyDTO.ThreadId))
             .FirstOrDefaultAsync();
+        
 
         string? loggedUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
@@ -113,6 +119,11 @@ public class ForumController(DataContext dataContext) : ControllerBase
         {
             return BadRequest($"Error creating adding new Reply: {ex.Message}");
         }
+
+        reply.UserId = _dataContext.Users
+                    .Where(u => u.Id == reply.UserId)
+                    .Select(u => $"{u.Name} {u.Surname}")
+                    .First();
 
         return Ok(reply);
     }

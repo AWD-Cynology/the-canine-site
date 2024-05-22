@@ -1,6 +1,7 @@
 export interface Thread {
     topicId: string;
     cynologyUserId: string;
+    username: string;
     title: string;
     text: string;
     datePosted: string;
@@ -11,6 +12,7 @@ export interface Thread {
 export interface Reply {
     threadId: string;
     userId: string;
+    username: string;
     text: string;
     datePosted: string;
     commentToReply: string;
