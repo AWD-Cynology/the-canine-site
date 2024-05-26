@@ -7,11 +7,12 @@ import { ApiService } from '../../services/api.service';
 import { WrapperComponent } from '../wrapper/wrapper.component';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { DogInfoDialogComponent } from '../dog-info-dialog/dog-info-dialog.component';
+import {MatTooltipModule} from '@angular/material/tooltip';
 
 @Component({
   selector: 'app-gallery',
   standalone: true,
-  imports: [ CommonModule, WrapperComponent, MatDialogModule ],
+  imports: [ CommonModule, WrapperComponent, MatDialogModule, MatTooltipModule ],
   templateUrl: './gallery.component.html',
   styleUrls: ['./gallery.component.css','../../styles.css']
 })
@@ -166,8 +167,8 @@ export class GalleryComponent implements OnInit {
 
   public openDialog(breed: Breed): void {
     this.dialog.open(DogInfoDialogComponent, {
-      width: '50vw',
-      height: '90vh',
+      width: 'fit-content',
+      height: 'fit-content',
       data: breed
     });
   }

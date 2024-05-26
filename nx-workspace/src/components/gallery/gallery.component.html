@@ -2,8 +2,8 @@
   <div class="gallery-container">
     <p class="points">Voting points: {{ points }}</p>
     <section class="gallery">
-      <div class="container gallery-item" *ngFor="let breed of data" (click)="openDialog(breed)">
-        <img src="{{ breed.image.url }}">
+      <div class="container gallery-item" *ngFor="let breed of data">
+        <img src="{{ breed.image.url }}" (click)="openDialog(breed)" class="breed-pic" matTooltip="Click to see breed info" matTooltipPosition="above">
         <div>
           <div class="dog-name">
             <span>{{ breed.name }}</span>
