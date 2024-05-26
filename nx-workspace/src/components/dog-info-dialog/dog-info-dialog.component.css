@@ -1,24 +1,44 @@
 .breed-dialog {
-    background-color: #f8f8f8;
     color: #6d4c41;
-    padding: 2rem;
+    padding: 1rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
-  
-.breed-dialog h1 {
+
+.dialog-heading h1 {
     color: #2d6a4f;
     margin-bottom: 10px;
     margin-top: 0;
 }
-  
-.breed-dialog img {
-    max-width: 100%;
-    border-radius: 8px;
+
+.dialog-content {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    align-items: center;
 }
-  
+
+.left-content {
+    display: flex;
+    flex-direction: column;
+}
+
+.center-content {
+    margin: 0 1rem;
+    justify-content: center;
+    text-align: center;
+}
+
+.breed-dialog img {
+    border-radius: 8px;
+    max-width: 700px;
+}
+
 .breed-dialog p {
     margin: 5px 0;
 }
-  
+
 .breed-dialog p strong {
     color: #795548;
 }

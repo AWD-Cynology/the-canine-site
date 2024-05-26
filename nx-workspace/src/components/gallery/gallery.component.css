@@ -36,7 +36,6 @@
     box-shadow: 5px 5px 10px 5px rgba(0, 0, 0, 0.1);
     padding: 10px !important;
     margin: 0;
-    cursor: pointer;
 }
 
 .gallery-container button {
@@ -100,4 +99,8 @@
     border-radius: 20px;
     box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
     text-align: center;
+}
+
+.breed-pic {
+    cursor: pointer;
 }
