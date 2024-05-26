@@ -73,7 +73,7 @@ builder.Services.AddIdentityApiEndpoints<CynologyUser>(options =>
 
 builder.Services.ConfigureAll<BearerTokenOptions>(options =>
 {
-    options.BearerTokenExpiration = TimeSpan.FromMinutes(5);
+    options.BearerTokenExpiration = TimeSpan.FromDays(30);
 });
 
 builder.Services.AddAuthentication();
